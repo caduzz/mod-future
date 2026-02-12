@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:blasting",
+  "category": "misc",
+  "group": "ingot_bismuth",
+  "ingredient": {
+    "item": "futuremod:raw_bismuth"
+  },
+  "result": {
+    "count": 1,
+    "id": "futuremod:ingot_bismuth"
+  },
+  "experience": 0.25,
+  "cookingtime": 100
+}

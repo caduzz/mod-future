@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": {
+      "item": "minecraft:amethyst_shard"
+    },
+    "B": {
+      "item": "futuremod:ingot_bismuth"
+    },
+    "C": {
+      "item": "minecraft:glow_ink_sac"
+    }
+  },
+  "pattern": [
+    "ACA",
+    "B B"
+  ],
+  "result": {
+    "count": 1,
+    "id": "futuremod:juju_glass"
+  }
+}

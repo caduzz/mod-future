@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "B": {
+      "item": "futuremod:ingot_bismuth"
+    },
+    "A": {
+      "item": "futuremod:juju_glass"
+    }
+  },
+  "pattern": [
+    "BAB",
+    "B B"
+  ],
+  "result": {
+    "count": 1,
+    "id": "futuremod:bismuth_helmet"
+  }
+}

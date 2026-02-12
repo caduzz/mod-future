@@ -1,0 +1,28 @@
+{
+  "item.futuremod.raw_bismuth": "Raw Bismuth",
+  "item.futuremod.ingot_bismuth": "Bismuth Ingot",
+
+  "block.futuremod.bismuth_block": "Block of Bismuth",
+  "block.futuremod.bismuth_ore": "Bismuth Ore",
+  "block.futuremod.bismuth_deepslate_ore": "Bismuth Deepslate Ore",
+
+  "creativetab.futuremod.bismuth_blocks": "Bismuth Blocks",
+  "creativetab.futuremod.bismuth_items": "Bismuth Items",
+  "creativetab.futuremod.equipments_items": "Bismuth Equipments",
+
+
+  "item.futuremod.bismuth_helmet": "Bismuth Helmet",
+  "item.futuremod.bismuth_chestplate": "Bismuth Chestplate",
+  "item.futuremod.bismuth_leggings": "Bismuth Leggings",
+  "item.futuremod.bismuth_boots": "Bismuth Boots",
+
+  "item.futuremod.juju_glass": "Juliete de Cria",
+
+  "item.futuremod.bismuth_axe": "Bismuth Axe",
+  "item.futuremod.bismuth_hoe": "Bismuth Hoe",
+  "item.futuremod.bismuth_sword": "Bismuth Sword",
+  "item.futuremod.bismuth_pickaxe": "Bismuth Pickaxe",
+
+  "key.categories.futuremod": "Futuremod Category",
+  "key.futuremod.zoom": "Futuremod Zoom"
+}
