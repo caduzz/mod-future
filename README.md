@@ -1,25 +1,83 @@
+# Future Mod
 
-Installation information
-=======
+Future Mod is a personal Minecraft mod project I developed in my free time to revisit and practice Java. The goal was not to build something massive, but to challenge myself by working directly with Minecraft’s modding ecosystem and understanding how everything connects under the hood.
 
-This template repository can be directly cloned to get you started with a new
-mod. Simply create a new repository cloned from this one, by following the
-instructions provided by [GitHub](https://docs.github.com/en/repositories/creating-and-managing-repositories/creating-a-repository-from-a-template).
+## Motivation
 
-Once you have your clone, simply open the repository in the IDE of your choice. The usual recommendation for an IDE is either IntelliJ IDEA or Eclipse.
+I started this project mainly to:
 
-If at any point you are missing libraries in your IDE, or you've run into problems you can
-run `gradlew --refresh-dependencies` to refresh the local cache. `gradlew clean` to reset everything 
-{this does not affect your code} and then start the process again.
+- Refresh my Java knowledge  
+- Explore NeoForge modding  
+- Understand how Minecraft systems (items, armor, tools, events, world generation, etc.) actually work  
+- Push myself to solve real-world coding issues instead of just following tutorials  
 
-Mapping Names:
-============
-By default, the MDK is configured to use the official mapping names from Mojang for methods and fields 
-in the Minecraft codebase. These names are covered by a specific license. All modders should be aware of this
-license. For the latest license text, refer to the mapping file itself, or the reference copy here:
-https://github.com/NeoForged/NeoForm/blob/main/Mojang.md
+One thing I quickly noticed:  
+Minecraft modding relies heavily on JSON for almost everything — recipes, loot tables, world generation, block states, models, and more.
 
-Additional Resources: 
-==========
-Community Documentation: https://docs.neoforged.net/  
-NeoForged Discord: https://discord.neoforged.net/
+While it was a bit frustrating at first (there is a lot of JSON), it also helped me better understand how data-driven systems work and why Minecraft is structured this way.
+
+---
+
+## Features Implemented
+
+Throughout development, I experimented with:
+
+- Custom Armor (with custom materials and attributes)  
+- Custom Tools (Pickaxe, Axe, Hoe, etc.)  
+- Custom Tiers  
+- Attribute Modifiers  
+- Enchantability fixes  
+- Block drop configuration  
+- Ore world generation  
+- Custom Keybind (Zoom with smooth FOV transition)  
+- Fall damage modification (bounce / cancel logic)  
+- Custom movement sound behavior  
+- Equipment-based effects (Fire Resistance, Jump Boost, etc.)
+
+---
+
+## Challenges Faced
+
+Some of the main challenges included:
+
+- Understanding NeoForge's event system  
+- Working with `DeferredRegister` and registries  
+- Fixing attribute modifiers not applying properly  
+- Ensuring tools dropped correct blocks (Tier & Tag system)  
+- Making armor non-stackable  
+- Handling client vs server side logic  
+- Implementing smooth zoom without FPS dependency  
+- Dealing with API changes between Minecraft versions  
+- Fixing compilation errors caused by method signature changes  
+- Understanding how `Holder`, `TagKey<Block>`, and registries work  
+
+And of course, a significant amount of JSON configuration.
+
+---
+
+## What I Learned
+
+This project helped me:
+
+- Get more comfortable with Java  
+- Improve debugging skills  
+- Understand Minecraft's architecture better  
+- Work with event-driven programming  
+- Deal with version migration issues  
+- Think more structurally about modular code  
+
+---
+
+## Project Status
+
+This is an experimental learning project.  
+It is not meant to be a polished public release — it is a sandbox for experimenting and improving my understanding of Java and Minecraft modding.
+
+---
+
+## Tech Stack
+
+- Java  
+- NeoForge  
+- Minecraft Modding API  
+- Gradle  

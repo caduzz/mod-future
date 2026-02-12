@@ -6,17 +6,17 @@
       "request": "launch",
       "name": "Client",
       "presentation": {
-        "group": "Mod Development - mod_future",
+        "group": "Mod Development - mod-future",
         "order": 0
       },
-      "projectName": "mod_future",
+      "projectName": "mod-future",
       "mainClass": "net.neoforged.devlaunch.Main",
       "args": [
-        "@D:\\arquivos\\codes\\minecraft\\mod_future\\build\\moddev\\clientRunProgramArgs.txt"
+        "@D:\\arquivos\\codes\\minecraft\\mod-future\\build\\moddev\\clientRunProgramArgs.txt"
       ],
       "vmArgs": [
-        "@D:\\arquivos\\codes\\minecraft\\mod_future\\build\\moddev\\clientRunVmArgs.txt",
-        "-Dfml.modFolders\u003dfuturemod%%D:\\arquivos\\codes\\minecraft\\mod_future\\bin\\main"
+        "@D:\\arquivos\\codes\\minecraft\\mod-future\\build\\moddev\\clientRunVmArgs.txt",
+        "-Dfml.modFolders\u003dfuturemod%%D:\\arquivos\\codes\\minecraft\\mod-future\\bin\\main"
       ],
       "cwd": "${workspaceFolder}\\run",
       "env": {},
@@ -28,17 +28,17 @@
       "request": "launch",
       "name": "Data",
       "presentation": {
-        "group": "Mod Development - mod_future",
+        "group": "Mod Development - mod-future",
         "order": 1
       },
-      "projectName": "mod_future",
+      "projectName": "mod-future",
       "mainClass": "net.neoforged.devlaunch.Main",
       "args": [
-        "@D:\\arquivos\\codes\\minecraft\\mod_future\\build\\moddev\\dataRunProgramArgs.txt"
+        "@D:\\arquivos\\codes\\minecraft\\mod-future\\build\\moddev\\dataRunProgramArgs.txt"
       ],
       "vmArgs": [
-        "@D:\\arquivos\\codes\\minecraft\\mod_future\\build\\moddev\\dataRunVmArgs.txt",
-        "-Dfml.modFolders\u003dfuturemod%%D:\\arquivos\\codes\\minecraft\\mod_future\\bin\\main"
+        "@D:\\arquivos\\codes\\minecraft\\mod-future\\build\\moddev\\dataRunVmArgs.txt",
+        "-Dfml.modFolders\u003dfuturemod%%D:\\arquivos\\codes\\minecraft\\mod-future\\bin\\main"
       ],
       "cwd": "${workspaceFolder}\\run",
       "env": {},
@@ -50,17 +50,17 @@
       "request": "launch",
       "name": "GameTestServer",
       "presentation": {
-        "group": "Mod Development - mod_future",
+        "group": "Mod Development - mod-future",
         "order": 2
       },
-      "projectName": "mod_future",
+      "projectName": "mod-future",
       "mainClass": "net.neoforged.devlaunch.Main",
       "args": [
-        "@D:\\arquivos\\codes\\minecraft\\mod_future\\build\\moddev\\gameTestServerRunProgramArgs.txt"
+        "@D:\\arquivos\\codes\\minecraft\\mod-future\\build\\moddev\\gameTestServerRunProgramArgs.txt"
       ],
       "vmArgs": [
-        "@D:\\arquivos\\codes\\minecraft\\mod_future\\build\\moddev\\gameTestServerRunVmArgs.txt",
-        "-Dfml.modFolders\u003dfuturemod%%D:\\arquivos\\codes\\minecraft\\mod_future\\bin\\main"
+        "@D:\\arquivos\\codes\\minecraft\\mod-future\\build\\moddev\\gameTestServerRunVmArgs.txt",
+        "-Dfml.modFolders\u003dfuturemod%%D:\\arquivos\\codes\\minecraft\\mod-future\\bin\\main"
       ],
       "cwd": "${workspaceFolder}\\run",
       "env": {},
@@ -72,17 +72,17 @@
       "request": "launch",
       "name": "Server",
       "presentation": {
-        "group": "Mod Development - mod_future",
+        "group": "Mod Development - mod-future",
         "order": 3
       },
-      "projectName": "mod_future",
+      "projectName": "mod-future",
       "mainClass": "net.neoforged.devlaunch.Main",
       "args": [
-        "@D:\\arquivos\\codes\\minecraft\\mod_future\\build\\moddev\\serverRunProgramArgs.txt"
+        "@D:\\arquivos\\codes\\minecraft\\mod-future\\build\\moddev\\serverRunProgramArgs.txt"
       ],
       "vmArgs": [
-        "@D:\\arquivos\\codes\\minecraft\\mod_future\\build\\moddev\\serverRunVmArgs.txt",
-        "-Dfml.modFolders\u003dfuturemod%%D:\\arquivos\\codes\\minecraft\\mod_future\\bin\\main"
+        "@D:\\arquivos\\codes\\minecraft\\mod-future\\build\\moddev\\serverRunVmArgs.txt",
+        "-Dfml.modFolders\u003dfuturemod%%D:\\arquivos\\codes\\minecraft\\mod-future\\bin\\main"
       ],
       "cwd": "${workspaceFolder}\\run",
       "env": {},
