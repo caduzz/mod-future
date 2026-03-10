@@ -23,7 +23,7 @@ public class ModSoundEvents {
         if (event.getEntity() instanceof Player player) {
             if (player.getItemBySlot(EquipmentSlot.FEET).getItem() == ModItems.BISMUTH_BOOTS.get()) {
                 Minecraft.getInstance().getSoundManager().play(
-                    SimpleSoundInstance.forUI(SoundEvents.SLIME_JUMP, 0.8f, 0.5f)
+                    SimpleSoundInstance.forUI(SoundEvents.ALLAY_AMBIENT_WITHOUT_ITEM, 0.8f, 0.5f)
                 );
             }
         }

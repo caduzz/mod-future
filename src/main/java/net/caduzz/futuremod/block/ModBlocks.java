@@ -4,6 +4,7 @@ import java.util.function.Supplier;
 
 import net.caduzz.futuremod.FutureMod;
 import net.caduzz.futuremod.item.ModItems;
+import net.caduzz.futuremod.block.BismuthAnvilBlock;
 import net.minecraft.util.valueproviders.UniformInt;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
@@ -41,6 +42,37 @@ public class ModBlocks {
       .strength(3f)
       .requiresCorrectToolForDrops()
       .sound(SoundType.AMETHYST_CLUSTER)
+    )
+  );
+
+  public static final DeferredBlock<Block> BISMUTH_ANVIL = registerBlock("bismuth_anvil",
+    () -> new BismuthAnvilBlock(
+      BlockBehaviour.Properties.of()
+        .strength(5.0F, 1200.0F)
+        .requiresCorrectToolForDrops()
+        .sound(SoundType.ANVIL)
+    )
+  );
+
+  /** Moldura do portal para a dimensão criativa: brilha e tem textura animada. */
+  public static final DeferredBlock<Block> CREATIVE_PORTAL_FRAME = registerBlock("creative_portal_frame",
+    () -> new CreativePortalFrameBlock(
+      BlockBehaviour.Properties.of()
+        .strength(4.0F)
+        .sound(SoundType.GLASS)
+        .lightLevel(state -> 15)
+        .noOcclusion()
+    )
+  );
+
+  /** Bloco interno do portal (não tem item, é colocado ao acender a moldura com esqueiro). */
+  public static final DeferredBlock<Block> CREATIVE_PORTAL = BLOCKS.register("creative_portal",
+    () -> new CreativePortalBlock(
+      BlockBehaviour.Properties.of()
+        .lightLevel(state -> 11)
+        .strength(-1.0F)
+        .noLootTable()
+        .noOcclusion()
     )
   );
 

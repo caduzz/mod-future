@@ -36,6 +36,8 @@ public class ModCreativeModeTabs {
           output.accept(ModBlocks.BISMUTH_BLOCK);   
           output.accept(ModBlocks.BISMUTH_ORE);
           output.accept(ModBlocks.BISMUTH_DEEPSLATE_ORE);
+          output.accept(ModBlocks.BISMUTH_ANVIL);
+          output.accept(ModBlocks.CREATIVE_PORTAL_FRAME);
         }
       )
       .build()
@@ -50,7 +52,9 @@ public class ModCreativeModeTabs {
           output.accept(ModItems.BISMUTH_CHESTPLATE);
           output.accept(ModItems.BISMUTH_LEGGINGS);
           output.accept(ModItems.BISMUTH_BOOTS);
-          output.accept(ModItems.JUJU_GLASS);
+          output.accept(ModItems.JETPACK);
+          output.accept(ModItems.BISMUTH_WARDEN_SPAWN_EGG);
+          output.accept(ModItems.REGENERATION_RELIC);
           output.accept(ModItems.BISMUTH_SWORD);
           output.accept(ModItems.BISMUTH_AXE);
           output.accept(ModItems.BISMUTH_PICKAXE);

@@ -13,15 +13,15 @@ import com.mojang.blaze3d.platform.InputConstants;
     bus = EventBusSubscriber.Bus.MOD
 )
 public class ModKeyBindings {
-
-    public static final KeyMapping ZOOM_KEY = new KeyMapping(
-        "key.futuremod.zoom",
-        InputConstants.KEY_Z,
+    /** Abre o menu do slot de relíquia (equipar Relíquia da Regeneração). */
+    public static final KeyMapping RELIC_SLOT_KEY = new KeyMapping(
+        "key.futuremod.relic_slot",
+        InputConstants.KEY_H,
         "key.categories.futuremod"
     );
 
     @SubscribeEvent
     public static void register(RegisterKeyMappingsEvent event) {
-      event.register(ZOOM_KEY);
+      event.register(RELIC_SLOT_KEY);
     }
 }

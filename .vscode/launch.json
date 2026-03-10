@@ -12,11 +12,11 @@
       "projectName": "mod-future",
       "mainClass": "net.neoforged.devlaunch.Main",
       "args": [
-        "@D:\\arquivos\\codes\\minecraft\\mod-future\\build\\moddev\\clientRunProgramArgs.txt"
+        "@D:\\arquivos\\minecraft\\mod-future\\build\\moddev\\clientRunProgramArgs.txt"
       ],
       "vmArgs": [
-        "@D:\\arquivos\\codes\\minecraft\\mod-future\\build\\moddev\\clientRunVmArgs.txt",
-        "-Dfml.modFolders\u003dfuturemod%%D:\\arquivos\\codes\\minecraft\\mod-future\\bin\\main"
+        "@D:\\arquivos\\minecraft\\mod-future\\build\\moddev\\clientRunVmArgs.txt",
+        "-Dfml.modFolders\u003dfuturemod%%D:\\arquivos\\minecraft\\mod-future\\bin\\main"
       ],
       "cwd": "${workspaceFolder}\\run",
       "env": {},
@@ -34,11 +34,11 @@
       "projectName": "mod-future",
       "mainClass": "net.neoforged.devlaunch.Main",
       "args": [
-        "@D:\\arquivos\\codes\\minecraft\\mod-future\\build\\moddev\\dataRunProgramArgs.txt"
+        "@D:\\arquivos\\minecraft\\mod-future\\build\\moddev\\dataRunProgramArgs.txt"
       ],
       "vmArgs": [
-        "@D:\\arquivos\\codes\\minecraft\\mod-future\\build\\moddev\\dataRunVmArgs.txt",
-        "-Dfml.modFolders\u003dfuturemod%%D:\\arquivos\\codes\\minecraft\\mod-future\\bin\\main"
+        "@D:\\arquivos\\minecraft\\mod-future\\build\\moddev\\dataRunVmArgs.txt",
+        "-Dfml.modFolders\u003dfuturemod%%D:\\arquivos\\minecraft\\mod-future\\bin\\main"
       ],
       "cwd": "${workspaceFolder}\\run",
       "env": {},
@@ -56,11 +56,11 @@
       "projectName": "mod-future",
       "mainClass": "net.neoforged.devlaunch.Main",
       "args": [
-        "@D:\\arquivos\\codes\\minecraft\\mod-future\\build\\moddev\\gameTestServerRunProgramArgs.txt"
+        "@D:\\arquivos\\minecraft\\mod-future\\build\\moddev\\gameTestServerRunProgramArgs.txt"
       ],
       "vmArgs": [
-        "@D:\\arquivos\\codes\\minecraft\\mod-future\\build\\moddev\\gameTestServerRunVmArgs.txt",
-        "-Dfml.modFolders\u003dfuturemod%%D:\\arquivos\\codes\\minecraft\\mod-future\\bin\\main"
+        "@D:\\arquivos\\minecraft\\mod-future\\build\\moddev\\gameTestServerRunVmArgs.txt",
+        "-Dfml.modFolders\u003dfuturemod%%D:\\arquivos\\minecraft\\mod-future\\bin\\main"
       ],
       "cwd": "${workspaceFolder}\\run",
       "env": {},
@@ -78,11 +78,11 @@
       "projectName": "mod-future",
       "mainClass": "net.neoforged.devlaunch.Main",
       "args": [
-        "@D:\\arquivos\\codes\\minecraft\\mod-future\\build\\moddev\\serverRunProgramArgs.txt"
+        "@D:\\arquivos\\minecraft\\mod-future\\build\\moddev\\serverRunProgramArgs.txt"
       ],
       "vmArgs": [
-        "@D:\\arquivos\\codes\\minecraft\\mod-future\\build\\moddev\\serverRunVmArgs.txt",
-        "-Dfml.modFolders\u003dfuturemod%%D:\\arquivos\\codes\\minecraft\\mod-future\\bin\\main"
+        "@D:\\arquivos\\minecraft\\mod-future\\build\\moddev\\serverRunVmArgs.txt",
+        "-Dfml.modFolders\u003dfuturemod%%D:\\arquivos\\minecraft\\mod-future\\bin\\main"
       ],
       "cwd": "${workspaceFolder}\\run",
       "env": {},

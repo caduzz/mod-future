@@ -55,4 +55,19 @@ public class ModArmorMaterials {
 
     );
 
+    public static final DeferredHolder<ArmorMaterial, ArmorMaterial> JETPACK = ARMOR_MATERIALS.register("jetpack",
+        () -> new ArmorMaterial(
+            Map.of(ArmorItem.Type.CHESTPLATE, 0),
+            15,
+            SoundEvents.ARMOR_EQUIP_LEATHER,
+            () -> Ingredient.EMPTY,
+            List.of(
+                new ArmorMaterial.Layer(
+                    ResourceLocation.fromNamespaceAndPath(FutureMod.MOD_ID, "jetpack"))
+            ),
+            0.0f,
+            0.0f
+        )
+    );
+
 }
