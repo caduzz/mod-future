@@ -1,13 +1,11 @@
 {
   "type": "futuremod:creative_realm",
   "generator": {
-    "type": "minecraft:flat",
-    "settings": {
-      "biome": "minecraft:plains",
-      "features": false,
-      "lakes": false,
-      "layers": [],
-      "structure_overrides": []
-    }
+    "type": "minecraft:noise",
+    "biome_source": {
+      "type": "minecraft:fixed",
+      "biome": "futuremod:creative_realm_cherry_grove"
+    },
+    "settings": "futuremod:creative_realm"
   }
 }

@@ -9,6 +9,7 @@ import net.minecraft.core.component.DataComponents;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EquipmentSlotGroup;
 import net.caduzz.futuremod.entity.ModEntities;
+import net.caduzz.futuremod.item.CigaretteItem;
 import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.AxeItem;
 import net.minecraft.world.item.HoeItem;
@@ -16,6 +17,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.PickaxeItem;
 import net.minecraft.world.item.SpawnEggItem;
 import net.minecraft.world.item.SwordItem;
+import net.minecraft.world.food.Foods;
 
 import net.minecraft.world.item.component.Unbreakable;
 import net.neoforged.bus.api.IEventBus;
@@ -344,6 +346,17 @@ public class ModItems {
   /** Relíquia que substitui os efeitos de regeneração/resistência da peitoral de bismuto. Equipa no slot Curios (charm). */
   public static final DeferredItem<Item> REGENERATION_RELIC = ITEMS.register("regeneration_relic",
       () -> new Item(new Item.Properties().stacksTo(1).rarity(net.caduzz.futuremod.ModEnumParams.RED_RARITY_PROXY.getValue())));
+
+  /** Cigarro: fumar teleporta para a Creative Realm (ou de volta ao Overworld). */
+  public static final DeferredItem<Item> CIGARETTE = ITEMS.register("cigarette",
+      () -> new CigaretteItem(new Item.Properties()));
+
+  /** Berries do proprio mod, para textura e controle independentes. */
+  public static final DeferredItem<Item> FUTURE_GLOW_BERRIES = ITEMS.register("future_glow_berries",
+      () -> new Item(new Item.Properties().food(Foods.GLOW_BERRIES)));
+
+  public static final DeferredItem<Item> FUTURE_SWEET_BERRIES = ITEMS.register("future_sweet_berries",
+      () -> new Item(new Item.Properties().food(Foods.SWEET_BERRIES)));
 
   public static final DeferredItem<SwordItem> BISMUTH_SWORD = ITEMS.register("bismuth_sword",
       () -> new SwordItem(

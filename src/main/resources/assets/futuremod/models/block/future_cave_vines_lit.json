@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:block/cross",
+  "textures": {
+    "cross": "futuremod:block/cave_vines_lit"
+  }
+}

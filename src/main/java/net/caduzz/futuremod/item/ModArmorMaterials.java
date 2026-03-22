@@ -52,7 +52,6 @@ public class ModArmorMaterials {
                                     ResourceLocation.fromNamespaceAndPath(FutureMod.MOD_ID, "glasses"))),
                     2.0f,
                     0.0f)
-
     );
 
     public static final DeferredHolder<ArmorMaterial, ArmorMaterial> JETPACK = ARMOR_MATERIALS.register("jetpack",

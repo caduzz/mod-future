@@ -33,16 +33,25 @@ public class ModSoundEvents {
     public static void onPlaySound(PlaySoundEvent event) {
         Player player = Minecraft.getInstance().player;
         if (player == null || event.getOriginalSound() == null) return;
-
-        String path = event.getOriginalSound().getLocation().getPath();
-
+        String path;
+        try {
+            path = event.getOriginalSound().getLocation().getPath();
+        } catch (NullPointerException e) {
+            return;
+        }
+        if (player.isUsingItem() && player.getUseItem().is(ModItems.CIGARETTE.get())) {
+            if (path.contains("eat") || path.contains("burp") || path.contains("drink")) {
+                event.setSound(null);
+                return;
+            }
+        }
         boolean isEquip = path.contains("armor.equip");
 
         if (isEquip) {
             boolean wearingBismuth = false;
             for (EquipmentSlot slot : EquipmentSlot.values()) {
                 if (slot.isArmor() && player.getItemBySlot(slot).getItem() instanceof ArmorItem armor) {
-                    if (player.getItemBySlot(slot).is(ModItems.INGOT_BISMUTH.get()) || 
+                    if (player.getItemBySlot(slot).is(ModItems.INGOT_BISMUTH.get()) ||
                         player.getItemBySlot(slot).getItem().toString().contains("bismuth")) {
                         wearingBismuth = true;
                         break;

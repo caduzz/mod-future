@@ -26,21 +26,21 @@ public class BismuthAnvilBlock extends AnvilBlock {
     @Override
     public MenuProvider getMenuProvider(BlockState state, Level level, BlockPos pos) {
         return new SimpleMenuProvider(
-                (containerId, playerInventory, player) -> new BismuthAnvilMenu(containerId, playerInventory, ContainerLevelAccess.create(level, pos)),
-                MENU_TITLE
-        );
+                (containerId, playerInventory, player) -> new BismuthAnvilMenu(containerId, playerInventory,
+                        ContainerLevelAccess.create(level, pos)),
+                MENU_TITLE);
     }
 
     @Override
-    protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hitResult) {
+    protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player,
+            BlockHitResult hitResult) {
         if (level.isClientSide()) {
             return InteractionResult.SUCCESS;
         }
         if (player instanceof net.minecraft.server.level.ServerPlayer serverPlayer && !(player instanceof FakePlayer)) {
             serverPlayer.openMenu(
                     state.getMenuProvider(level, pos),
-                    buf -> buf.writeBlockPos(pos)
-            );
+                    buf -> buf.writeBlockPos(pos));
         }
         return InteractionResult.CONSUME;
     }

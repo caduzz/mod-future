@@ -4,9 +4,7 @@ import org.slf4j.Logger;
 
 import com.mojang.logging.LogUtils;
 
-import net.caduzz.futuremod.block.CreativePortalHelper;
 import net.caduzz.futuremod.block.ModBlocks;
-import net.caduzz.futuremod.world.SpawnPortalStructure;
 import net.caduzz.futuremod.client.ModKeyBindings;
 import net.caduzz.futuremod.command.ModCommands;
 import net.caduzz.futuremod.menu.ModMenuTypes;
@@ -23,6 +21,11 @@ import net.caduzz.futuremod.integration.CuriosHelper;
 import net.caduzz.futuremod.item.ModItems;
 import net.caduzz.futuremod.client.RelicSlotScreen;
 import net.minecraft.client.gui.screens.inventory.AnvilScreen;
+import net.minecraft.client.renderer.ItemBlockRenderTypes;
+import net.minecraft.client.renderer.RenderType;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.item.Items;
+import net.neoforged.neoforge.client.event.RegisterColorHandlersEvent;
 import net.neoforged.neoforge.client.event.RegisterMenuScreensEvent;
 import net.neoforged.neoforge.network.PacketDistributor;
 import net.minecraft.client.Minecraft;
@@ -59,13 +62,10 @@ import net.neoforged.neoforge.event.entity.living.LivingDeathEvent;
 import net.neoforged.neoforge.event.entity.living.LivingFallEvent;
 import net.neoforged.neoforge.event.entity.player.ItemTooltipEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
-import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
-import net.neoforged.neoforge.event.entity.player.UseItemOnBlockEvent;
 import net.neoforged.neoforge.event.RegisterCommandsEvent;
-import net.neoforged.neoforge.event.level.BlockEvent;
-import net.neoforged.neoforge.event.level.LevelEvent;
 import net.neoforged.neoforge.event.server.ServerStartingEvent;
 import net.neoforged.neoforge.event.tick.PlayerTickEvent;
+import net.caduzz.futuremod.dimension.ModDimensions;
 
 // The value here should match an entry in the META-INF/neoforge.mods.toml file
 @Mod(FutureMod.MOD_ID)
@@ -112,104 +112,9 @@ public class FutureMod {
     public void onServerStarting(ServerStartingEvent event) {
     }
 
-    /** Quando o overworld carrega, coloca a moldura do portal no spawn (só se ainda não existir). */
-    @SubscribeEvent
-    public void onLevelLoad(LevelEvent.Load event) {
-        if (event.getLevel() instanceof ServerLevel level && level.dimension() == Level.OVERWORLD) {
-            SpawnPortalStructure.tryCreateAtSpawn(level);
-        }
-    }
-
     @SubscribeEvent
     public void onRegisterCommands(RegisterCommandsEvent event) {
         ModCommands.register(event.getDispatcher());
-    }
-
-    /** Esqueiro na moldura ou no vão: tenta acender o portal (uma única lógica em CreativePortalHelper). */
-    @SubscribeEvent
-    public void onRightClickBlock(PlayerInteractEvent.RightClickBlock event) {
-        if (event.getLevel().isClientSide()) return;
-        if (!event.getItemStack().is(net.minecraft.world.item.Items.FLINT_AND_STEEL)) return;
-        LOGGER.info("[FutureMod DEBUG] RightClickBlock: esqueiro em pos {} face {}", event.getPos(), event.getFace());
-        boolean ok = CreativePortalHelper.tryLightPortal(event.getLevel(), event.getPos(), event.getFace());
-        LOGGER.info("[FutureMod DEBUG] RightClickBlock: tryLightPortal = {}", ok);
-        if (!ok) return;
-        event.setCanceled(true);
-        if (event.getEntity() instanceof ServerPlayer player && !player.getAbilities().instabuild) {
-            event.getItemStack().hurtAndBreak(1, player, EquipmentSlot.MAINHAND);
-        }
-    }
-
-    @SubscribeEvent
-    public void onUseItemOnBlock(UseItemOnBlockEvent event) {
-        var ctx = event.getUseOnContext();
-        if (ctx.getLevel().isClientSide()) return;
-        if (!ctx.getItemInHand().is(net.minecraft.world.item.Items.FLINT_AND_STEEL)) return;
-        LOGGER.info("[FutureMod DEBUG] UseItemOnBlock: esqueiro em pos {} face {}", ctx.getClickedPos(), event.getFace());
-        boolean ok = CreativePortalHelper.tryLightPortal(ctx.getLevel(), ctx.getClickedPos(), event.getFace());
-        LOGGER.info("[FutureMod DEBUG] UseItemOnBlock: tryLightPortal = {}", ok);
-        if (!ok) return;
-        event.cancelWithResult(net.minecraft.world.ItemInteractionResult.SUCCESS);
-        if (!ctx.getPlayer().getAbilities().instabuild) {
-            ctx.getItemInHand().hurtAndBreak(1, ctx.getPlayer(), EquipmentSlot.MAINHAND);
-        }
-    }
-
-    /** DEBUG: Detecta quando fogo é colocado (para ver se o jogo dispara o evento). */
-    @SubscribeEvent
-    public void onBlockPlace(BlockEvent.EntityPlaceEvent event) {
-        if (event.getLevel().isClientSide()) return;
-        if (!(event.getLevel() instanceof Level level)) return;
-        var state = event.getPlacedBlock();
-        if (state.is(net.minecraft.world.level.block.Blocks.FIRE)) {
-            var pos = event.getPos();
-            boolean nearFrame = false;
-            for (var d : net.minecraft.core.Direction.values()) {
-                if (level.getBlockState(pos.relative(d)).is(ModBlocks.CREATIVE_PORTAL_FRAME.get())) {
-                    nearFrame = true;
-                    break;
-                }
-            }
-            LOGGER.info("[FutureMod DEBUG] EntityPlaceEvent: FOGO colocado em {} perto da moldura? {}", pos, nearFrame);
-            if (nearFrame) {
-                boolean ok = CreativePortalHelper.tryLightPortal(level, pos, null);
-                LOGGER.info("[FutureMod DEBUG] EntityPlaceEvent: tryLightPortal = {}", ok);
-            }
-        }
-    }
-
-    /** Remove o portal quando qualquer bloco da moldura ou do portal for quebrado. */
-    @SubscribeEvent
-    public void onBlockBreak(BlockEvent.BreakEvent event) {
-        if (event.getLevel().isClientSide()) return;
-        if (!(event.getLevel() instanceof Level level)) return;
-        var pos = event.getPos();
-        var state = event.getState();
-        if (state.is(ModBlocks.CREATIVE_PORTAL_FRAME.get()) || state.is(ModBlocks.CREATIVE_PORTAL.get())) {
-            CreativePortalHelper.removePortalAt(level, pos);
-        }
-    }
-
-    /** Reage quando um bloco da moldura recebe atualização de vizinho (ex.: fogo colocado ao lado). */
-    @SubscribeEvent
-    public void onNeighborNotify(BlockEvent.NeighborNotifyEvent event) {
-        if (event.getLevel().isClientSide()) return;
-        var pos = event.getPos();
-        var state = event.getState();
-        if (!state.is(ModBlocks.CREATIVE_PORTAL_FRAME.get())) return;
-        // Verifica se algum vizinho é fogo
-        boolean hasFire = false;
-        for (var d : net.minecraft.core.Direction.values()) {
-            if (event.getLevel().getBlockState(pos.relative(d)).is(net.minecraft.world.level.block.Blocks.FIRE)) {
-                hasFire = true;
-                break;
-            }
-        }
-        LOGGER.info("[FutureMod DEBUG] NeighborNotify: moldura em {} tem fogo vizinho? {}", pos, hasFire);
-        if (!hasFire) return;
-        if (!(event.getLevel() instanceof Level level)) return;
-        boolean ok = CreativePortalHelper.tryLightPortal(level, pos, null);
-        LOGGER.info("[FutureMod DEBUG] NeighborNotify: tryLightPortal = {}", ok);
     }
 
     @SubscribeEvent
@@ -237,6 +142,23 @@ public class FutureMod {
     static class ClientModEvents {
         @SubscribeEvent
         static void onClientSetup(FMLClientSetupEvent event) {
+            event.enqueueWork(() -> {
+                // Blocos com textura alpha precisam de cutout para nao renderizar fundo preto.
+                ItemBlockRenderTypes.setRenderLayer(ModBlocks.FUTURE_CAVE_VINES.get(), RenderType.cutout());
+                ItemBlockRenderTypes.setRenderLayer(ModBlocks.FUTURE_CAVE_VINES_LIT.get(), RenderType.cutout());
+                ItemBlockRenderTypes.setRenderLayer(ModBlocks.FUTURE_GLOW_FLOWER.get(), RenderType.cutout());
+
+                net.minecraft.client.renderer.item.ItemProperties.register(
+                    ModItems.CIGARETTE.get(),
+                    net.minecraft.resources.ResourceLocation.fromNamespaceAndPath(FutureMod.MOD_ID, "use_progress"),
+                    (stack, level, entity, seed) -> {
+                        if (entity == null || !entity.isUsingItem() || !entity.getUseItem().is(ModItems.CIGARETTE.get())) return 0f;
+                        int remaining = entity.getUseItemRemainingTicks();
+                        int duration = ModItems.CIGARETTE.get().getUseDuration(stack, entity);
+                        return duration > 0 ? 1f - (float) remaining / duration : 0f;
+                    }
+                );
+            });
         }
 
         @SubscribeEvent
@@ -249,10 +171,35 @@ public class FutureMod {
         static void registerEntityRenderers(EntityRenderersEvent.RegisterRenderers event) {
             event.registerEntityRenderer(ModEntities.BISMUTH_WARDEN.get(), WardenRenderer::new);
         }
+
+        /** Cor rosa-roxa (#ffa6c5) para os blocos de musgo do FutureMod. */
+        private static final int FUTURE_MOSS_COLOR = 0xf003fc;
+        /** Cor roxa (#ffb9d3) para o bloco de grama do FutureMod. */
+        private static final int FUTURE_GRASS_COLOR = 0xf558fc;
+
+        @SubscribeEvent
+        static void onRegisterBlockColors(RegisterColorHandlersEvent.Block event) {
+            event.register((state, level, pos, tintIndex) -> FUTURE_MOSS_COLOR,
+                    ModBlocks.FUTURE_MOSS_BLOCK.get(),
+                    ModBlocks.FUTURE_MOSS_CARPET.get()
+                );
+            event.register((state, level, pos, tintIndex) -> FUTURE_GRASS_COLOR,
+                    ModBlocks.FUTURE_GRASS_BLOCK.get());
+        }
+
+        @SubscribeEvent
+        static void onRegisterItemColors(RegisterColorHandlersEvent.Item event) {
+            event.register((stack, tintIndex) -> FUTURE_MOSS_COLOR,
+                ModBlocks.FUTURE_MOSS_BLOCK.get(),
+                ModBlocks.FUTURE_MOSS_CARPET.get()
+            );
+            event.register((stack, tintIndex) -> FUTURE_GRASS_COLOR, ModBlocks.FUTURE_GRASS_BLOCK.get().asItem());
+        }
     }
 
     @EventBusSubscriber(modid = FutureMod.MOD_ID, bus = EventBusSubscriber.Bus.GAME, value = Dist.CLIENT)
     public static class KadouTooltipEvents {
+
         private static final Component KADOU_LORE = Component.literal("Um artefato que perteceu a カドゥ...").withStyle(ChatFormatting.RED);
 
         private static final Component RELIC_SLOT_LORE = Component.literal("Uma reliquia que perteceu a カドゥ").withStyle(ChatFormatting.RED);
@@ -388,6 +335,7 @@ public class FutureMod {
                     player.addEffect(new MobEffectInstance(MobEffects.DAMAGE_RESISTANCE, 40, bismuthPieces - 1, false, false, true));
                     player.addEffect(new MobEffectInstance(MobEffects.REGENERATION, 40, bismuthPieces - 1, false, false, true));
                     player.addEffect(new MobEffectInstance(MobEffects.LUCK, 40, bismuthPieces - 1, false, false, true));
+                    player.addEffect(new MobEffectInstance(MobEffects.DAMAGE_BOOST, 40, bismuthPieces - 1, false, false, true));
                 }
 
                 // Capacete bismuto: bônus de saturação (não é atributo de entidade, aplicado via FoodData)

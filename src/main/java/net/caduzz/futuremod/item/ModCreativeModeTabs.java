@@ -22,6 +22,8 @@ public class ModCreativeModeTabs {
         (itemDisplayParamenters, output) -> {
           output.accept(ModItems.INGOT_BISMUTH);   
           output.accept(ModItems.RAW_BISMUTH);
+          output.accept(ModItems.FUTURE_GLOW_BERRIES);
+          output.accept(ModItems.FUTURE_SWEET_BERRIES);
         }
       )
       .build()
@@ -37,7 +39,12 @@ public class ModCreativeModeTabs {
           output.accept(ModBlocks.BISMUTH_ORE);
           output.accept(ModBlocks.BISMUTH_DEEPSLATE_ORE);
           output.accept(ModBlocks.BISMUTH_ANVIL);
-          output.accept(ModBlocks.CREATIVE_PORTAL_FRAME);
+          output.accept(ModBlocks.FUTURE_MOSS_BLOCK);
+          output.accept(ModBlocks.FUTURE_MOSS_CARPET);
+          output.accept(ModBlocks.FUTURE_GRASS_BLOCK);
+          output.accept(ModBlocks.FUTURE_GLOW_FLOWER);
+          output.accept(ModBlocks.FUTURE_CAVE_VINES);
+          output.accept(ModBlocks.FUTURE_CAVE_VINES_LIT);
         }
       )
       .build()
@@ -55,6 +62,7 @@ public class ModCreativeModeTabs {
           output.accept(ModItems.JETPACK);
           output.accept(ModItems.BISMUTH_WARDEN_SPAWN_EGG);
           output.accept(ModItems.REGENERATION_RELIC);
+          output.accept(ModItems.CIGARETTE);
           output.accept(ModItems.BISMUTH_SWORD);
           output.accept(ModItems.BISMUTH_AXE);
           output.accept(ModItems.BISMUTH_PICKAXE);
