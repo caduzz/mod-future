@@ -32,6 +32,11 @@ public final class InfiniteVoidDomainManager {
     private record DomainShell(BlockPos center, int radius, int floorY, Map<BlockPos, BlockState> previousStates) {}
 
     private static final Map<UUID, DomainShell> ACTIVE_SHELLS = new HashMap<>();
+
+    /** Snapshot no Pre do tick; restaurado no Post — ServerTick.Post corre depois do movimento, entao so zerar delta nao segura players. */
+    private record DomainPlayerFreezeAnchor(Vec3 position, float yRot, float xRot) {}
+
+    private static final Map<UUID, DomainPlayerFreezeAnchor> DOMAIN_PLAYER_FREEZE_ANCHORS = new HashMap<>();
     private static final int DAMAGE_INTERVAL_TICKS = 10;
     private static final float DOMAIN_DAMAGE_MAX_HEALTH_RATIO = 0.20f;
     private static final float LIFE_STEAL_RATIO = 0.50f;
@@ -64,12 +69,13 @@ public final class InfiniteVoidDomainManager {
 
     /**
      * Congela vitimas e projéteis em todos os domínios ativos; sincroniza freeze nos clientes.
-     * Deve rodar uma vez por tick no servidor (antes ou depois dos player ticks).
+     * Sincroniza freeze; movimento de players e corrigido em PlayerTick Pre/Post (ancora).
      */
     public static void tickActiveDomains(MinecraftServer server) {
         if (ACTIVE_SHELLS.isEmpty()) {
             for (ServerPlayer p : server.getPlayerList().getPlayers()) {
                 DomainFreezeSync.sync(p, false);
+                clearDomainFreezePlayerAnchor(p);
             }
             return;
         }
@@ -96,11 +102,10 @@ public final class InfiniteVoidDomainManager {
                             && entity.position().distanceToSqr(center) <= radiusSq);
 
             for (Entity entity : inDomain) {
-                if (entity instanceof LivingEntity living) {
+                if (entity instanceof ServerPlayer victim) {
+                    DomainFreezeSync.sync(victim, true);
+                } else if (entity instanceof LivingEntity living) {
                     applyFreezeToVictim(living);
-                    if (living instanceof ServerPlayer victim) {
-                        DomainFreezeSync.sync(victim, true);
-                    }
                 } else if (entity instanceof Projectile projectile) {
                     if (projectile.getOwner() != null && projectile.getOwner().getUUID().equals(ownerId)) {
                         continue;
@@ -114,8 +119,43 @@ public final class InfiniteVoidDomainManager {
         for (ServerPlayer player : server.getPlayerList().getPlayers()) {
             if (!isInsideAnyForeignDomain(player, radiusSq)) {
                 DomainFreezeSync.sync(player, false);
+                clearDomainFreezePlayerAnchor(player);
             }
         }
+    }
+
+    public static boolean isForeignDomainVictim(ServerPlayer player) {
+        if (ACTIVE_SHELLS.isEmpty()) {
+            return false;
+        }
+        double r = Config.INFINITE_VOID_RADIUS_BLOCKS.get();
+        return isInsideAnyForeignDomain(player, r * r);
+    }
+
+    public static void captureDomainFreezePlayerAnchor(ServerPlayer player) {
+        if (!isForeignDomainVictim(player)) {
+            return;
+        }
+        DOMAIN_PLAYER_FREEZE_ANCHORS.put(
+                player.getUUID(),
+                new DomainPlayerFreezeAnchor(player.position(), player.getYRot(), player.getXRot()));
+    }
+
+    public static void snapDomainFreezePlayerToAnchor(ServerPlayer player) {
+        if (!isForeignDomainVictim(player)) {
+            return;
+        }
+        DomainPlayerFreezeAnchor anchor = DOMAIN_PLAYER_FREEZE_ANCHORS.get(player.getUUID());
+        if (anchor == null) {
+            return;
+        }
+        player.moveTo(anchor.position.x, anchor.position.y, anchor.position.z, anchor.yRot, anchor.xRot);
+        player.setDeltaMovement(Vec3.ZERO);
+        player.hurtMarked = true;
+    }
+
+    public static void clearDomainFreezePlayerAnchor(ServerPlayer player) {
+        DOMAIN_PLAYER_FREEZE_ANCHORS.remove(player.getUUID());
     }
 
     private static boolean isInsideAnyForeignDomain(ServerPlayer player, double radiusSq) {
@@ -161,8 +201,17 @@ public final class InfiniteVoidDomainManager {
         double radius = Config.INFINITE_VOID_RADIUS_BLOCKS.get();
         ServerLevel level = owner.serverLevel();
         Vec3 domainCenter = getDomainCenter(owner);
+        double radiusSq = radius * radius;
+        AABB domainArea = new AABB(domainCenter, domainCenter).inflate(radius);
+        for (LivingEntity victim : level.getEntitiesOfClass(
+                LivingEntity.class,
+                domainArea,
+                entity -> entity.isAlive()
+                        && entity != owner
+                        && entity.position().distanceToSqr(domainCenter) <= radiusSq)) {
+            victim.addEffect(new MobEffectInstance(MobEffects.GLOWING, 25, 0, false, false, true));
+        }
 
-        owner.addEffect(new MobEffectInstance(MobEffects.GLOWING, 25, 0, false, false, true));
         owner.removeEffect(MobEffects.BLINDNESS);
         owner.removeEffect(MobEffects.MOVEMENT_SLOWDOWN);
         owner.removeEffect(MobEffects.DIG_SLOWDOWN);
@@ -175,6 +224,7 @@ public final class InfiniteVoidDomainManager {
 
     public static void cleanupFor(ServerPlayer player) {
         clearDomainShell(player);
+        clearDomainFreezePlayerAnchor(player);
         DomainFreezeSync.clear(player);
     }
 
