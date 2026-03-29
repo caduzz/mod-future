@@ -20,8 +20,16 @@ public class ModKeyBindings {
         "key.categories.futuremod"
     );
 
+    /** Ativa o dominio infinite_void_domain. */
+    public static final KeyMapping INFINITE_VOID_DOMAIN_KEY = new KeyMapping(
+        "key.futuremod.infinite_void_domain",
+        InputConstants.KEY_V,
+        "key.categories.futuremod"
+    );
+
     @SubscribeEvent
     public static void register(RegisterKeyMappingsEvent event) {
       event.register(RELIC_SLOT_KEY);
+      event.register(INFINITE_VOID_DOMAIN_KEY);
     }
 }

@@ -26,10 +26,54 @@
     {
       "type": "java",
       "request": "launch",
-      "name": "Data",
+      "name": "Client1",
       "presentation": {
         "group": "Mod Development - mod-future",
         "order": 1
+      },
+      "projectName": "mod-future",
+      "mainClass": "net.neoforged.devlaunch.Main",
+      "args": [
+        "@D:\\arquivos\\minecraft\\mod-future\\build\\moddev\\client1RunProgramArgs.txt"
+      ],
+      "vmArgs": [
+        "@D:\\arquivos\\minecraft\\mod-future\\build\\moddev\\client1RunVmArgs.txt",
+        "-Dfml.modFolders\u003dfuturemod%%D:\\arquivos\\minecraft\\mod-future\\bin\\main"
+      ],
+      "cwd": "${workspaceFolder}\\run\\client1",
+      "env": {},
+      "console": "internalConsole",
+      "shortenCommandLine": "none"
+    },
+    {
+      "type": "java",
+      "request": "launch",
+      "name": "Client2",
+      "presentation": {
+        "group": "Mod Development - mod-future",
+        "order": 2
+      },
+      "projectName": "mod-future",
+      "mainClass": "net.neoforged.devlaunch.Main",
+      "args": [
+        "@D:\\arquivos\\minecraft\\mod-future\\build\\moddev\\client2RunProgramArgs.txt"
+      ],
+      "vmArgs": [
+        "@D:\\arquivos\\minecraft\\mod-future\\build\\moddev\\client2RunVmArgs.txt",
+        "-Dfml.modFolders\u003dfuturemod%%D:\\arquivos\\minecraft\\mod-future\\bin\\main"
+      ],
+      "cwd": "${workspaceFolder}\\run\\client2",
+      "env": {},
+      "console": "internalConsole",
+      "shortenCommandLine": "none"
+    },
+    {
+      "type": "java",
+      "request": "launch",
+      "name": "Data",
+      "presentation": {
+        "group": "Mod Development - mod-future",
+        "order": 3
       },
       "projectName": "mod-future",
       "mainClass": "net.neoforged.devlaunch.Main",
@@ -51,7 +95,7 @@
       "name": "GameTestServer",
       "presentation": {
         "group": "Mod Development - mod-future",
-        "order": 2
+        "order": 4
       },
       "projectName": "mod-future",
       "mainClass": "net.neoforged.devlaunch.Main",
@@ -73,7 +117,7 @@
       "name": "Server",
       "presentation": {
         "group": "Mod Development - mod-future",
-        "order": 3
+        "order": 5
       },
       "projectName": "mod-future",
       "mainClass": "net.neoforged.devlaunch.Main",

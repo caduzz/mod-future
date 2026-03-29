@@ -5,9 +5,13 @@ import org.slf4j.Logger;
 import com.mojang.logging.LogUtils;
 
 import net.caduzz.futuremod.block.ModBlocks;
+import net.caduzz.futuremod.client.DomainFreezeClientState;
+import net.caduzz.futuremod.client.InfiniteVoidClientState;
 import net.caduzz.futuremod.client.ModKeyBindings;
 import net.caduzz.futuremod.command.ModCommands;
+import net.caduzz.futuremod.domain.InfiniteVoidDomainAttachment;
 import net.caduzz.futuremod.menu.ModMenuTypes;
+import net.caduzz.futuremod.network.ActivateInfiniteVoidDomainPayload;
 import net.caduzz.futuremod.network.OpenRelicMenuPayload;
 import net.caduzz.futuremod.network.ModPayloadHandlers;
 import net.caduzz.futuremod.relic.RelicSlotAttachment;
@@ -88,6 +92,7 @@ public class FutureMod {
         ModEntities.register(modEventBus);
         ModArmorMaterials.ARMOR_MATERIALS.register(modEventBus);
         RelicSlotAttachment.ATTACHMENT_TYPES.register(modEventBus);
+        InfiniteVoidDomainAttachment.ATTACHMENT_TYPES.register(modEventBus);
         ModPayloadHandlers.register(modEventBus);
         
         modEventBus.addListener(this::addCreative);
@@ -131,8 +136,20 @@ public class FutureMod {
     public class ClientEvents {
         @SubscribeEvent
         public static void onClientTick(ClientTickEvent.Post event) {
+            InfiniteVoidClientState.tick();
+            Minecraft mc = Minecraft.getInstance();
+            if (DomainFreezeClientState.isFrozen() && mc.player != null && mc.player.input != null) {
+                mc.player.input.forwardImpulse = 0.0f;
+                mc.player.input.leftImpulse = 0.0f;
+                mc.player.input.jumping = false;
+                mc.player.input.shiftKeyDown = false;
+                mc.player.setSprinting(false);
+            }
             if (ModKeyBindings.RELIC_SLOT_KEY.consumeClick()) {
                 PacketDistributor.sendToServer(new OpenRelicMenuPayload());
+            }
+            if (ModKeyBindings.INFINITE_VOID_DOMAIN_KEY.consumeClick()) {
+                PacketDistributor.sendToServer(new ActivateInfiniteVoidDomainPayload());
             }
         }
 }

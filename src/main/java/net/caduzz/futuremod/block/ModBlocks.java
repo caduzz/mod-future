@@ -5,6 +5,7 @@ import java.util.function.Supplier;
 import net.caduzz.futuremod.FutureMod;
 import net.caduzz.futuremod.item.ModItems;
 import net.caduzz.futuremod.block.BismuthAnvilBlock;
+import net.caduzz.futuremod.block.VoidBlackBlock;
 import net.minecraft.util.valueproviders.UniformInt;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
@@ -100,6 +101,15 @@ public class ModBlocks {
               .instabreak()
               .sound(SoundType.CAVE_VINES)
               .lightLevel(state -> 12)));
+
+  /** Bloco de vazio absoluto: textura preta e sem resposta visual a luz. */
+  public static final DeferredBlock<Block> VOID_BLACK_BLOCK = registerBlock("void_black_block",
+      () -> new VoidBlackBlock(
+          BlockBehaviour.Properties.of()
+              .mapColor(MapColor.COLOR_BLACK)
+              .strength(-1.0F, 3600000.0F)
+              .requiresCorrectToolForDrops()
+              .sound(SoundType.BASALT)));
 
   private static <T extends Block> DeferredBlock<T> registerBlock(String name, Supplier<T> block) {
     DeferredBlock<T> toReturn = BLOCKS.register(name, block);

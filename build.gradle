@@ -51,6 +51,22 @@ neoForge {
             systemProperty 'neoforge.enabledGameTestNamespaces', project.mod_id
         }
 
+        // Cliente 1 para teste multiplayer local
+        client1 {
+            client()
+            gameDirectory = project.file('run/client1')
+            programArguments.addAll '--username', 'Gojo'
+            systemProperty 'neoforge.enabledGameTestNamespaces', project.mod_id
+        }
+
+        // Cliente 2 para teste multiplayer local
+        client2 {
+            client()
+            gameDirectory = project.file('run/client2')
+            programArguments.addAll '--username', 'Geto'
+            systemProperty 'neoforge.enabledGameTestNamespaces', project.mod_id
+        }
+
         server {
             server()
             programArgument '--nogui'

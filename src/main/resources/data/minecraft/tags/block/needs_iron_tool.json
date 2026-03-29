@@ -1,6 +1,7 @@
 {
   "replace": false,
   "values": [
-    "futuremod:bismuth_ore"
+    "futuremod:bismuth_ore",
+    "futuremod:void_black_block"
   ]
 }

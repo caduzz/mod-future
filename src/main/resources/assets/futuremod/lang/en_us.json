@@ -12,6 +12,7 @@
   "block.futuremod.future_glow_flower": "Future Glow Flower",
   "block.futuremod.future_cave_vines": "Future Cave Vines",
   "block.futuremod.future_cave_vines_lit": "Future Cave Vines (Lit)",
+  "block.futuremod.void_black_block": "Void Black Block",
   "container.futuremod.bismuth_anvil": "Bismuth Anvil",
 
   "dimension.futuremod.creative_realm": "Creative Realm",
@@ -61,5 +62,10 @@
   "tooltip.futuremod.slot.boots": "Boots",
 
   "key.categories.futuremod": "Futuremod Category",
-  "key.futuremod.relic_slot": "Open Relic Slot"
+  "key.futuremod.relic_slot": "Open Relic Slot",
+  "key.futuremod.infinite_void_domain": "Activate Infinite Void Domain",
+
+  "message.futuremod.infinite_void_domain.activated": "Muryokuso - Infinite Void unleashed.",
+  "message.futuremod.infinite_void_domain.already_active": "Your domain is already active.",
+  "message.futuremod.infinite_void_domain.cooldown": "Infinite Void is on cooldown for %s seconds."
 }

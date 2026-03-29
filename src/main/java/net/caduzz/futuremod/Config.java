@@ -29,6 +29,22 @@ public class Config {
             .comment("A list of items to log on common setup.")
             .defineListAllowEmpty("items", List.of("minecraft:iron_ingot"), () -> "", Config::validateItemName);
 
+    public static final ModConfigSpec.IntValue INFINITE_VOID_RADIUS_BLOCKS = BUILDER
+            .comment("Radius in blocks of the infinite_void_domain.")
+            .defineInRange("infiniteVoid.radiusBlocks", 14, 10, 20);
+
+    public static final ModConfigSpec.IntValue INFINITE_VOID_DURATION_SECONDS = BUILDER
+            .comment("Duration in seconds for infinite_void_domain.")
+            .defineInRange("infiniteVoid.durationSeconds", 45, 30, 60);
+
+    public static final ModConfigSpec.IntValue INFINITE_VOID_COOLDOWN_SECONDS = BUILDER
+            .comment("Cooldown in seconds for infinite_void_domain.")
+            .defineInRange("infiniteVoid.cooldownSeconds", 45, 30, 60);
+
+    public static final ModConfigSpec.IntValue INFINITE_VOID_PARALYSIS_SECONDS = BUILDER
+            .comment("Paralysis window in seconds while the domain starts.")
+            .defineInRange("infiniteVoid.paralysisSeconds", 45, 40, 60);
+
     static final ModConfigSpec SPEC = BUILDER.build();
 
     private static boolean validateItemName(final Object obj) {
