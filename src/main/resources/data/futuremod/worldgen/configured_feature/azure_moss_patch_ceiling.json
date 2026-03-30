@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:simple_block",
+  "config": {
+    "to_place": {
+      "type": "minecraft:weighted_state_provider",
+      "entries": [
+        {
+          "data": {
+            "Name": "futuremod:azure_cave_vines_lit"
+          },
+          "weight": 9
+        },
+        {
+          "data": {
+            "Name": "minecraft:flowering_azalea"
+          },
+          "weight": 1
+        }
+      ]
+    }
+  }
+}

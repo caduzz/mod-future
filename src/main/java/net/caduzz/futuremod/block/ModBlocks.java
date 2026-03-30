@@ -111,6 +111,69 @@ public class ModBlocks {
               .requiresCorrectToolForDrops()
               .sound(SoundType.BASALT)));
 
+  // ============ Blocos do Bioma Azul Bebê ============
+
+  /** Musgo azul bebê do bioma etéreo. */
+  public static final DeferredBlock<Block> AZURE_MOSS_BLOCK = registerBlock("azure_moss_block",
+      () -> new Block(
+          BlockBehaviour.Properties.of()
+              .mapColor(MapColor.COLOR_CYAN)
+              .strength(0.1F)
+              .sound(SoundType.MOSS)));
+
+  /** Tapete de musgo azul bebê. */
+  public static final DeferredBlock<Block> AZURE_MOSS_CARPET = registerBlock("azure_moss_carpet",
+      () -> new CarpetBlock(
+          BlockBehaviour.Properties.of()
+              .mapColor(MapColor.COLOR_CYAN)
+              .strength(0.1F)
+              .sound(SoundType.MOSS)));
+
+  /** Bloco de grama azul bebê. */
+  public static final DeferredBlock<Block> AZURE_GRASS_BLOCK = registerBlock("azure_grass_block",
+      () -> new Block(
+          BlockBehaviour.Properties.of()
+              .mapColor(MapColor.COLOR_CYAN)
+              .strength(0.6F)
+              .sound(SoundType.GRASS)));
+
+  /** Flor azul bebê com brilho suave etéreo. */
+  public static final DeferredBlock<Block> AZURE_GLOW_FLOWER = registerBlock("azure_glow_flower",
+      () -> new Block(
+          BlockBehaviour.Properties.of()
+              .mapColor(MapColor.COLOR_CYAN)
+              .noCollission()
+              .instabreak()
+              .sound(SoundType.GRASS)
+              .lightLevel(state -> 8)));
+
+  /** Vinhas azuis da Creative Realm para geração no teto. */
+  public static final DeferredBlock<Block> AZURE_CAVE_VINES = registerBlock("azure_cave_vines",
+      () -> new FutureCaveVinesBlock(
+          BlockBehaviour.Properties.of()
+              .mapColor(MapColor.COLOR_CYAN)
+              .noCollission()
+              .instabreak()
+              .sound(SoundType.CAVE_VINES)));
+
+  /** Variante luminosa das vinhas azuis. */
+  public static final DeferredBlock<Block> AZURE_CAVE_VINES_LIT = registerBlock("azure_cave_vines_lit",
+      () -> new FutureCaveVinesBlock(
+          BlockBehaviour.Properties.of()
+              .mapColor(MapColor.COLOR_CYAN)
+              .noCollission()
+              .instabreak()
+              .sound(SoundType.CAVE_VINES)
+              .lightLevel(state -> 10)));
+
+  /** Bloco de solo azul bebê - versão sólida para camadas profundas. */
+  public static final DeferredBlock<Block> AZURE_SOIL_BLOCK = registerBlock("azure_soil_block",
+      () -> new Block(
+          BlockBehaviour.Properties.of()
+              .mapColor(MapColor.COLOR_LIGHT_BLUE)
+              .strength(0.5F)
+              .sound(SoundType.ROOTED_DIRT)));
+
   private static <T extends Block> DeferredBlock<T> registerBlock(String name, Supplier<T> block) {
     DeferredBlock<T> toReturn = BLOCKS.register(name, block);
     registerBlockItem(name, toReturn);

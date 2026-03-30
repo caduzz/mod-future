@@ -1,0 +1,49 @@
+{
+  "type": "minecraft:tree",
+  "config": {
+    "trunk": {
+      "type": "minecraft:simple_state_provider",
+      "state": {
+        "Name": "minecraft:spruce_wood"
+      }
+    },
+    "foliage": {
+      "type": "minecraft:simple_state_provider",
+      "state": {
+        "Name": "minecraft:spruce_leaves",
+        "Properties": {
+          "distance": "1",
+          "persistent": "false"
+        }
+      }
+    },
+    "sapling": {
+      "type": "minecraft:simple_state_provider",
+      "state": {
+        "Name": "minecraft:spruce_sapling"
+      }
+    },
+    "dirt": {
+      "type": "minecraft:simple_state_provider",
+      "state": {
+        "Name": "minecraft:rooted_dirt"
+      }
+    },
+    "minimum_height": 4,
+    "height_rand_a": 2,
+    "height_rand_b": 1,
+    "max_height": null,
+    "trunk_height_rand_a": 0,
+    "trunk_height_rand_b": 0,
+    "foliage_height": 3,
+    "foliage_radius": 2,
+    "foliage_radius_when_isLarge": 2,
+    "ignore_vines": true,
+    "decorators": [
+      {
+        "type": "minecraft:leave_vine",
+        "probability": 0.15
+      }
+    ]
+  }
+}

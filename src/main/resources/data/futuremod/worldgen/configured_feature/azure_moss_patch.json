@@ -1,0 +1,34 @@
+{
+  "type": "minecraft:simple_block",
+  "config": {
+    "to_place": {
+      "type": "minecraft:weighted_state_provider",
+      "entries": [
+        {
+          "data": {
+            "Name": "futuremod:azure_moss_carpet"
+          },
+          "weight": 80
+        },
+        {
+          "data": {
+            "Name": "futuremod:azure_glow_flower"
+          },
+          "weight": 3
+        },
+        {
+          "data": {
+            "Name": "minecraft:flowering_azalea"
+          },
+          "weight": 4
+        },
+        {
+          "data": {
+            "Name": "minecraft:azalea"
+          },
+          "weight": 7
+        }
+      ]
+    }
+  }
+}

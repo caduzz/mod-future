@@ -3,8 +3,34 @@
   "generator": {
     "type": "minecraft:noise",
     "biome_source": {
-      "type": "minecraft:fixed",
-      "biome": "futuremod:creative_realm_cherry_grove"
+      "type": "minecraft:multi_noise",
+      "preset": "minecraft:overworld",
+      "biomes": [
+        {
+          "biome": "futuremod:creative_realm_magenta_grove",
+          "parameters": {
+            "continentalness": [-1.0, -0.0],
+            "depth": [-1.0, 1.0],
+            "erosion": [-1.0, 1.0],
+            "humidity": [-1.0, 1.0],
+            "offset": 0.0,
+            "temperature": [-1.0, 1.0],
+            "weirdness": [-1.0, 0.0]
+          }
+        },
+        {
+          "biome": "futuremod:creative_realm_azure_glade",
+          "parameters": {
+            "continentalness": [-1.0, -0.0],
+            "depth": [-1.0, 1.0],
+            "erosion": [-1.0, 1.0],
+            "humidity": [-1.0, 1.0],
+            "offset": 0.0,
+            "temperature": [-1.0, 1.0],
+            "weirdness": [0.0, 1.0]
+          }
+        }
+      ]
     },
     "settings": "futuremod:creative_realm"
   }

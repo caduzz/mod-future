@@ -1,0 +1,6 @@
+{
+  "parent": "item/handheld",
+  "textures": {
+    "layer0": "futuremod:item/azure_moss_carpet"
+  }
+}

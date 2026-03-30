@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:block/flower",
+  "textures": {
+    "texture": "minecraft:block/blue_orchid"
+  }
+}
