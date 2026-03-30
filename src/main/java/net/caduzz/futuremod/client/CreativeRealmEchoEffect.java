@@ -43,7 +43,8 @@ public final class CreativeRealmEchoEffect {
 
     private static final int DELAY_MIN_TICKS = 3; // 0.15s
     private static final int DELAY_MAX_TICKS = 7; // 0.35s
-    private static final float[] ECHO_VOLUMES = { 0.55f, 0.32f, 0.18f };
+    // Mesmo sem EFX, eco manual usa mix mais perceptível. A voz original fica intacta.
+    private static final float[] ECHO_VOLUMES = { 0.75f, 0.50f, 0.30f };
     private static final int MAX_PENDING_ECHOS = 128;
 
     private static int effectId = 0;
@@ -126,38 +127,58 @@ public final class CreativeRealmEchoEffect {
         if (sound == null) return;
         if (playingEchoNow) return;
         if (sound instanceof EchoedSoundInstance) return;
-        if (!shouldScheduleEcho(sound)) return;
 
-        scheduleManualEchos(sound, mc);
+        // Tenta aplicar reverberação via OpenAL EFX a todas as fontes.
+        // Caso não haja suporte, mantém fallback de eco manual para feedback audível.
+        if (!efxAvailable || !reverbEnabled) {
+            if (shouldScheduleEcho(sound)) {
+                scheduleManualEchos(sound, mc);
+            }
+        }
     }
 
     private static void ensureReverbInitialized() {
-        if (efxAvailable || effectId != 0 || effectSlotId != 0) return;
-        if (!isEfxSupported()) return;
+        // Se já está inicializado e disponivel, não refaz.
+        if (efxAvailable && effectId != 0 && effectSlotId != 0) return;
+
+        if (!isEfxSupported()) {
+            efxAvailable = false;
+            return;
+        }
+
+        if (effectId != 0) {
+            EXTEfx.alDeleteEffects(effectId);
+            effectId = 0;
+        }
+
+        if (effectSlotId != 0) {
+            EXTEfx.alDeleteAuxiliaryEffectSlots(effectSlotId);
+            effectSlotId = 0;
+        }
 
         effectId = EXTEfx.alGenEffects();
         EXTEfx.alEffecti(effectId, EXTEfx.AL_EFFECT_TYPE, EXTEfx.AL_EFFECT_REVERB);
 
-        // Reverb suave de caverna grande:
-        // pre-delay ~0.2s, decay ~2.0s, room size médio/grande, damping leve.
-        EXTEfx.alEffectf(effectId, EXTEfx.AL_REVERB_DENSITY, 0.78f);
-        EXTEfx.alEffectf(effectId, EXTEfx.AL_REVERB_DIFFUSION, 0.82f);
-        EXTEfx.alEffectf(effectId, EXTEfx.AL_REVERB_GAIN, 0.45f);
-        EXTEfx.alEffectf(effectId, EXTEfx.AL_REVERB_GAINHF, 0.86f);
-        EXTEfx.alEffectf(effectId, EXTEfx.AL_REVERB_DECAY_TIME, 2.0f);
-        EXTEfx.alEffectf(effectId, EXTEfx.AL_REVERB_DECAY_HFRATIO, 0.72f);
-        EXTEfx.alEffectf(effectId, EXTEfx.AL_REVERB_REFLECTIONS_GAIN, 0.13f);
-        EXTEfx.alEffectf(effectId, EXTEfx.AL_REVERB_REFLECTIONS_DELAY, 0.20f);
-        EXTEfx.alEffectf(effectId, EXTEfx.AL_REVERB_LATE_REVERB_GAIN, 1.15f);
-        EXTEfx.alEffectf(effectId, EXTEfx.AL_REVERB_LATE_REVERB_DELAY, 0.24f);
-        EXTEfx.alEffectf(effectId, EXTEfx.AL_REVERB_AIR_ABSORPTION_GAINHF, 0.97f);
+        // Reverb mais presente, mas sem sufocar agudos.
+        // Dry permanece; wet é auxiliário via AL_AUXILIARY_SEND_FILTER.
+        EXTEfx.alEffectf(effectId, EXTEfx.AL_REVERB_DENSITY, 0.85f);
+        EXTEfx.alEffectf(effectId, EXTEfx.AL_REVERB_DIFFUSION, 0.88f);
+        EXTEfx.alEffectf(effectId, EXTEfx.AL_REVERB_GAIN, 0.75f);          // ganho de reverb geral (aumenta presença)
+        EXTEfx.alEffectf(effectId, EXTEfx.AL_REVERB_GAINHF, 0.95f);        // preservar agudos
+        EXTEfx.alEffectf(effectId, EXTEfx.AL_REVERB_DECAY_TIME, 2.2f);      // decay levemente maior para mais espacialidade
+        EXTEfx.alEffectf(effectId, EXTEfx.AL_REVERB_DECAY_HFRATIO, 0.78f);  // menos atenuação alta
+        EXTEfx.alEffectf(effectId, EXTEfx.AL_REVERB_REFLECTIONS_GAIN, 0.20f);
+        EXTEfx.alEffectf(effectId, EXTEfx.AL_REVERB_REFLECTIONS_DELAY, 0.18f);
+        EXTEfx.alEffectf(effectId, EXTEfx.AL_REVERB_LATE_REVERB_GAIN, 1.35f);
+        EXTEfx.alEffectf(effectId, EXTEfx.AL_REVERB_LATE_REVERB_DELAY, 0.22f);
+        EXTEfx.alEffectf(effectId, EXTEfx.AL_REVERB_AIR_ABSORPTION_GAINHF, 0.92f);
 
         effectSlotId = EXTEfx.alGenAuxiliaryEffectSlots();
         EXTEfx.alAuxiliaryEffectSloti(effectSlotId, EXTEfx.AL_EFFECTSLOT_EFFECT, effectId);
 
         efxAvailable = true;
+        warnedMissingEfx = false;
     }
-
     private static boolean isEfxSupported() {
         long context = ALC10.alcGetCurrentContext();
         if (context == 0L) return false;
@@ -201,68 +222,98 @@ public final class CreativeRealmEchoEffect {
 
         int sourceId = extractSourceId(channel);
         if (sourceId <= 0) return;
-        if (ATTACHED_SOURCES.add(sourceId)) {
-            attachAuxSend(sourceId);
-        }
+
+        // Reconfigure o send para cada som que inicia. ===> garante confiabilidade para fontes rápidas.
+        attachAuxSend(sourceId);
+
+        ATTACHED_SOURCES.add(sourceId);
     }
 
     private static int extractSourceId(Channel channel) {
         if (channel == null) return 0;
-
-        int id = findSourceId(channel);
-        if (id > 0) return id;
-
-        // Alguns builds encapsulam a source em um objeto interno acessivel por metodo.
-        try {
-            for (Method method : channel.getClass().getDeclaredMethods()) {
-                if (method.getParameterCount() == 0) {
-                    method.setAccessible(true);
-                    Object nested = method.invoke(channel);
-                    int nestedId = findSourceId(nested);
-                    if (nestedId > 0) return nestedId;
-                }
-            }
-        } catch (Exception e) {
-            // Ignora e retorna 0.
-        }
-        return 0;
+        return findSourceId(channel);
     }
 
     private static int findSourceId(Object obj) {
         if (obj == null) return 0;
 
-        // Tenta métodos "getSource"/"source".
-        for (Method method : obj.getClass().getDeclaredMethods()) {
-            if (method.getParameterCount() == 0 && method.getReturnType() == int.class) {
-                String name = method.getName().toLowerCase();
-                if (name.contains("source")) {
-                    try {
-                        method.setAccessible(true);
-                        int id = (int) method.invoke(obj);
-                        if (id > 0) return id;
-                    } catch (Exception ignored) {
-                    }
-                }
+        // Verifica métodos declarados e herdados.
+        for (Method method : getAllMethods(obj.getClass())) {
+            if (method.getParameterCount() != 0) continue;
+            String name = method.getName().toLowerCase();
+            if (!name.contains("source")) continue;
+
+            try {
+                method.setAccessible(true);
+                Object result = method.invoke(obj);
+                int id = toSourceId(result);
+                if (id > 0) return id;
+            } catch (Exception ignored) {
             }
         }
 
-        // Fallback por campo int contendo "source".
-        Class<?> type = obj.getClass();
-        while (type != null) {
-            for (Field field : type.getDeclaredFields()) {
-                if (field.getType() == int.class && field.getName().toLowerCase().contains("source")) {
-                    try {
-                        field.setAccessible(true);
-                        int id = field.getInt(obj);
-                        if (id > 0) return id;
-                    } catch (Exception ignored) {
-                    }
-                }
+        // Fallback por campos declarados e herdados.
+        for (Field field : getAllFields(obj.getClass())) {
+            String fieldName = field.getName().toLowerCase();
+            if (!fieldName.contains("source")) continue;
+
+            try {
+                field.setAccessible(true);
+                Object value = field.get(obj);
+                int id = toSourceId(value);
+                if (id > 0) return id;
+            } catch (Exception ignored) {
             }
-            type = type.getSuperclass();
+        }
+
+        // Fallback: recursivo em objetos internos para encontrar o source id.
+        for (Method method : getAllMethods(obj.getClass())) {
+            if (method.getParameterCount() != 0) continue;
+            try {
+                method.setAccessible(true);
+                Object nested = method.invoke(obj);
+                if (nested == null || nested == obj) continue;
+                int nestedId = findSourceId(nested);
+                if (nestedId > 0) return nestedId;
+            } catch (Exception ignored) {
+            }
         }
 
         return 0;
+    }
+
+    private static int toSourceId(Object value) {
+        if (value instanceof Number number) {
+            long longValue = number.longValue();
+            if (longValue > 0 && longValue <= Integer.MAX_VALUE) {
+                return (int) longValue;
+            }
+        }
+        return 0;
+    }
+
+    private static List<Method> getAllMethods(Class<?> clazz) {
+        List<Method> methods = new ArrayList<>();
+        Class<?> current = clazz;
+        while (current != null) {
+            for (Method method : current.getDeclaredMethods()) {
+                methods.add(method);
+            }
+            current = current.getSuperclass();
+        }
+        return methods;
+    }
+
+    private static List<Field> getAllFields(Class<?> clazz) {
+        List<Field> fields = new ArrayList<>();
+        Class<?> current = clazz;
+        while (current != null) {
+            for (Field field : current.getDeclaredFields()) {
+                fields.add(field);
+            }
+            current = current.getSuperclass();
+        }
+        return fields;
     }
 
     private static void attachAuxSend(int sourceId) {
@@ -302,15 +353,13 @@ public final class CreativeRealmEchoEffect {
 
     private static boolean shouldScheduleEcho(SoundInstance sound) {
         try {
-            if (sound.getLocation() == null) return false;
-            SoundSource source = sound.getSource();
-            if (source == SoundSource.MUSIC || source == SoundSource.RECORDS || source == SoundSource.MASTER) {
-                return false;
-            }
+            if (sound.getLocation() == null) return true;
             String path = sound.getLocation().getPath();
+
+            // Aplicar eco em todos os sons de jogo (inclusive passo, mobs, ambiente), mas não UI/click/toast.
             return !(path.contains("ui.") || path.contains("click") || path.contains("toast"));
         } catch (Exception e) {
-            return false;
+            return true;
         }
     }
 
