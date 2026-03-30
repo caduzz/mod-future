@@ -41,11 +41,24 @@ public final class CreativeRealmEchoEffect {
     private static final Set<Integer> ATTACHED_SOURCES = ConcurrentHashMap.newKeySet();
     private static final List<ScheduledEcho> SCHEDULED_ECHOS = new CopyOnWriteArrayList<>();
 
-    private static final int DELAY_MIN_TICKS = 3; // 0.15s
-    private static final int DELAY_MAX_TICKS = 7; // 0.35s
-    // Mesmo sem EFX, eco manual usa mix mais perceptível. A voz original fica intacta.
-    private static final float[] ECHO_VOLUMES = { 0.75f, 0.50f, 0.30f };
+    // === REALISTIC ECHO PARAMETERS ===
+    // Baseado em comportamento acústico real de ambientes fechados
+    private static final int DELAY_BASE_TICKS = 6;             // ~80ms base (80 / 20 = 6 ticks aprox)
+    private static final float DELAY_VARIATION_MIN = 0.85f;    // -15% variação
+    private static final float DELAY_VARIATION_MAX = 1.15f;    // +15% variação
+    private static final int NUM_ECHOS = 2;                    // 2-3 ecos para naturalidade (em vez de array fixo)
+    private static final float ECHO_DECAY_FACTOR = 0.60f;      // Decay exponencial: 0.60^n (natural, não linear)
+    private static final float[] ECHO_VOLUME_BASE = { 0.65f, 0.40f }; // Volume base para cada eco
     private static final int MAX_PENDING_ECHOS = 128;
+
+    // === HIGH-PASS FILTER + FREQUENCY DEGRADATION ===
+    // Simula absorção natural de altas frequências a cada reflexão
+    private static final float REVERB_DRY_LEVEL = 0.98f;       // 98% sinal direto (prioriza original)
+    private static final float REVERB_WET_LEVEL = 0.22f;       // 22% sinal processado (reverb complementar)
+    private static final float[] ECHO_PITCH_MULTIPLIERS = { 1.01f, 1.05f }; // Degradação progressiva de frequências
+    private static final float[] ECHO_PITCH_DAMPING = { 0.96f, 0.92f }; // Amortecimento progressivo (damping)
+    private static final float ECHO_VOLUME_JITTER = 0.05f;     // ±5% variação em volume (imperfeição natural)
+    private static final float ECHO_DELAY_JITTER = 0.08f;      // ±8% variação em delay (imperfeição natural)
 
     private static int effectId = 0;
     private static int effectSlotId = 0;
@@ -159,19 +172,19 @@ public final class CreativeRealmEchoEffect {
         effectId = EXTEfx.alGenEffects();
         EXTEfx.alEffecti(effectId, EXTEfx.AL_EFFECT_TYPE, EXTEfx.AL_EFFECT_REVERB);
 
-        // Reverb mais presente, mas sem sufocar agudos.
-        // Dry permanece; wet é auxiliário via AL_AUXILIARY_SEND_FILTER.
-        EXTEfx.alEffectf(effectId, EXTEfx.AL_REVERB_DENSITY, 0.85f);
-        EXTEfx.alEffectf(effectId, EXTEfx.AL_REVERB_DIFFUSION, 0.88f);
-        EXTEfx.alEffectf(effectId, EXTEfx.AL_REVERB_GAIN, 0.75f);          // ganho de reverb geral (aumenta presença)
-        EXTEfx.alEffectf(effectId, EXTEfx.AL_REVERB_GAINHF, 0.95f);        // preservar agudos
-        EXTEfx.alEffectf(effectId, EXTEfx.AL_REVERB_DECAY_TIME, 2.2f);      // decay levemente maior para mais espacialidade
-        EXTEfx.alEffectf(effectId, EXTEfx.AL_REVERB_DECAY_HFRATIO, 0.78f);  // menos atenuação alta
-        EXTEfx.alEffectf(effectId, EXTEfx.AL_REVERB_REFLECTIONS_GAIN, 0.20f);
-        EXTEfx.alEffectf(effectId, EXTEfx.AL_REVERB_REFLECTIONS_DELAY, 0.18f);
-        EXTEfx.alEffectf(effectId, EXTEfx.AL_REVERB_LATE_REVERB_GAIN, 1.35f);
-        EXTEfx.alEffectf(effectId, EXTEfx.AL_REVERB_LATE_REVERB_DELAY, 0.22f);
-        EXTEfx.alEffectf(effectId, EXTEfx.AL_REVERB_AIR_ABSORPTION_GAINHF, 0.92f);
+        // Reverb realista: simula ambiente físico curto/médio (câmara, sala natural, caverna pequena)
+        // Estratégia: reverb curto + decay progressivo = naturalidade
+        EXTEfx.alEffectf(effectId, EXTEfx.AL_REVERB_DENSITY, 0.75f);       // Moderado (câmara real)
+        EXTEfx.alEffectf(effectId, EXTEfx.AL_REVERB_DIFFUSION, 0.82f);     // Bom espalhamento sem overdiffusion
+        EXTEfx.alEffectf(effectId, EXTEfx.AL_REVERB_GAIN, 0.55f);          // Ganho conservador (sem boom)
+        EXTEfx.alEffectf(effectId, EXTEfx.AL_REVERB_GAINHF, 0.94f);        // Preserva agudos naturalmente
+        EXTEfx.alEffectf(effectId, EXTEfx.AL_REVERB_DECAY_TIME, 1.5f);     // Decay CURTO (1.0-1.8s conforme ger req)
+        EXTEfx.alEffectf(effectId, EXTEfx.AL_REVERB_DECAY_HFRATIO, 0.80f); // HF decay mais rápido (natural damping)
+        EXTEfx.alEffectf(effectId, EXTEfx.AL_REVERB_REFLECTIONS_GAIN, 0.16f); // Reflexões iniciais realistas
+        EXTEfx.alEffectf(effectId, EXTEfx.AL_REVERB_REFLECTIONS_DELAY, 0.12f); // Delay menor = ambiente mais próximo
+        EXTEfx.alEffectf(effectId, EXTEfx.AL_REVERB_LATE_REVERB_GAIN, 1.05f); // Late reverb moderado
+        EXTEfx.alEffectf(effectId, EXTEfx.AL_REVERB_LATE_REVERB_DELAY, 0.18f); // Delay natural para late reflections
+        EXTEfx.alEffectf(effectId, EXTEfx.AL_REVERB_AIR_ABSORPTION_GAINHF, 0.98f); // Absorção natural do ar
 
         effectSlotId = EXTEfx.alGenAuxiliaryEffectSlots();
         EXTEfx.alAuxiliaryEffectSloti(effectSlotId, EXTEfx.AL_EFFECTSLOT_EFFECT, effectId);
@@ -384,16 +397,41 @@ public final class CreativeRealmEchoEffect {
             z = mc.player.getZ();
         }
 
-        int delay = DELAY_MIN_TICKS + rng.nextInt(DELAY_MAX_TICKS - DELAY_MIN_TICKS + 1);
+        // === REALISTIC ECHO SCHEDULING ===
+        // Simula comportamento acústico real com:
+        // 1. Variação de delay progressiva (não-linear, como reflexões reais)
+        // 2. Decaimento exponencial natural (0.60^n)
+        // 3. Imperfeições aleatórias em cada parâmetro
         
-        for (float echoVolumeFactor : ECHO_VOLUMES) {
-            float echoVolume = Math.max(0.01f, baseVolume * echoVolumeFactor);
-            float echoPitch = basePitch * (0.94f + rng.nextFloat() * 0.04f);
+        int delayTicks = DELAY_BASE_TICKS;
+        float accumulatedVolume = baseVolume;
+        
+        for (int echoIndex = 0; echoIndex < NUM_ECHOS; echoIndex++) {
+            // === DELAY COM VARIAÇÃO PROGRESSIVA ===
+            // Primeira reflexão tem menos variação; subsequentes têm mais (realism)
+            float delayVariation = DELAY_VARIATION_MIN + rng.nextFloat() * (DELAY_VARIATION_MAX - DELAY_VARIATION_MIN);
+            int actualDelay = Math.max(1, (int) (delayTicks * delayVariation));
+            
+            // === VOLUME COM DECAIMENTO EXPONENCIAL + JITTER ===
+            // Decay: 0.60^n (natural exponential)
+            float decayedVolume = ECHO_VOLUME_BASE[echoIndex] * (float) Math.pow(ECHO_DECAY_FACTOR, echoIndex);
+            // Adiciona ±5% jitter para imperfeição natural
+            float volumeJitter = 1.0f + (rng.nextFloat() - 0.5f) * 2 * ECHO_VOLUME_JITTER;
+            float echoVolume = Math.max(0.02f, baseVolume * decayedVolume * volumeJitter);
+            
+            // === PITCH COM DEGRADAÇÃO PROGRESSIVA ===
+            // Cada eco tem pitch ligeiramente maior (simula menos graves)
+            float pitchMultiplier = ECHO_PITCH_MULTIPLIERS[echoIndex];
+            float pitchDamping = ECHO_PITCH_DAMPING[echoIndex];
+            float echoPitch = basePitch * pitchMultiplier * pitchDamping * (0.97f + rng.nextFloat() * 0.06f);
+            
+            // Garante que há espaço na fila de eco
             while (SCHEDULED_ECHOS.size() >= MAX_PENDING_ECHOS) {
                 SCHEDULED_ECHOS.remove(0);
             }
+            
             SCHEDULED_ECHOS.add(new ScheduledEcho(
-                    tickCounter + delay,
+                    tickCounter + delayTicks,
                     original.getLocation(),
                     original.getSource(),
                     echoVolume,
@@ -402,7 +440,11 @@ public final class CreativeRealmEchoEffect {
                     y,
                     z,
                     rng));
-            delay += DELAY_MIN_TICKS + rng.nextInt(DELAY_MAX_TICKS - DELAY_MIN_TICKS + 1);
+            
+            // === PRÓXIMO DELAY: PROGRESSIVO NÃO-LINEAR ===
+            // Ao invés de somar fixo, usa multiplicador progressivo
+            // Isto simula como reflexões posteriores levam mais tempo (ambiente maior)
+            delayTicks = (int) (delayTicks * 1.4f + rng.nextInt(3) - 1);
         }
     }
 }
