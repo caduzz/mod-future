@@ -1,10 +1,7 @@
 {
   "variants": {
-    "berries=false": {
+    "": {
       "model": "futuremod:block/azure_cave_vines_lit"
-    },
-    "berries=true": {
-      "model": "futuremod:block/azure_cave_vines_lit_berries"
     }
   }
 }

@@ -1,6 +1,6 @@
 {
-  "parent": "minecraft:block/flower",
+  "parent": "minecraft:block/cross",
   "textures": {
-    "texture": "minecraft:block/blue_orchid"
+    "cross": "minecraft:block/blue_orchid"
   }
 }

@@ -8,9 +8,9 @@
   },
   "downfall": 0.7,
   "effects": {
-    "fog_color": 16711935,
-    "foliage_color": 10181046,
-    "grass_color": 10181046,
+    "fog_color": 16777215,
+    "foliage_color": 16777215,
+    "grass_color": 16777215,
     "mood_sound": {
       "block_search_extent": 12,
       "offset": 2.0,
@@ -93,16 +93,15 @@
     ],
     [
       "minecraft:glow_lichen",
-      "minecraft:patch_tall_grass_2",
-      "minecraft:patch_grass_plain",
       "minecraft:flower_cherry",
-      "futuremod:magenta_cherry_trees",
+      "minecraft:trees_cherry",
       "futuremod:future_moss_ceiling_vegetation",
       "futuremod:future_moss_vegetation",
       "minecraft:rooted_azalea_tree",
       "minecraft:spore_blossom"
     ],
     [
+      "futuremod:creative_realm_snow_layer",
       "minecraft:freeze_top_layer"
     ]
   ],

@@ -200,10 +200,14 @@ public class FutureMod {
             event.registerEntityRenderer(ModEntities.PURPLE_VOID_ORB.get(), PurpleVoidOrbRenderer::new);
         }
 
-        /** Cor rosa-roxa (#ffa6c5) para os blocos de musgo do FutureMod. */
+        /** Cor rosa-roxa para musgo / tapete do bioma Magenta. */
         private static final int FUTURE_MOSS_COLOR = 0xf003fc;
-        /** Cor roxa (#ffb9d3) para o bloco de grama do FutureMod. */
+        /** Cor roxa para grama do bioma Magenta. */
         private static final int FUTURE_GRASS_COLOR = 0xf558fc;
+        /** Ciano claro para musgo / tapete do bioma Azure. */
+        private static final int AZURE_MOSS_COLOR = 0x4dd9d9;
+        /** Ciano para grama do bioma Azure. */
+        private static final int AZURE_GRASS_COLOR = 0x7aebf0;
 
         @SubscribeEvent
         static void onRegisterBlockColors(RegisterColorHandlersEvent.Block event) {
@@ -213,6 +217,11 @@ public class FutureMod {
                 );
             event.register((state, level, pos, tintIndex) -> FUTURE_GRASS_COLOR,
                     ModBlocks.FUTURE_GRASS_BLOCK.get());
+            event.register((state, level, pos, tintIndex) -> AZURE_MOSS_COLOR,
+                    ModBlocks.AZURE_MOSS_BLOCK.get(),
+                    ModBlocks.AZURE_MOSS_CARPET.get());
+            event.register((state, level, pos, tintIndex) -> AZURE_GRASS_COLOR,
+                    ModBlocks.AZURE_GRASS_BLOCK.get());
         }
 
         @SubscribeEvent
@@ -222,6 +231,10 @@ public class FutureMod {
                 ModBlocks.FUTURE_MOSS_CARPET.get()
             );
             event.register((stack, tintIndex) -> FUTURE_GRASS_COLOR, ModBlocks.FUTURE_GRASS_BLOCK.get().asItem());
+            event.register((stack, tintIndex) -> AZURE_MOSS_COLOR,
+                ModBlocks.AZURE_MOSS_BLOCK.get(),
+                ModBlocks.AZURE_MOSS_CARPET.get());
+            event.register((stack, tintIndex) -> AZURE_GRASS_COLOR, ModBlocks.AZURE_GRASS_BLOCK.get().asItem());
         }
     }
 

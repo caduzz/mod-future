@@ -8,19 +8,14 @@
   },
   "downfall": 0.6,
   "effects": {
-    "fog_color": 14283882,
-    "foliage_color": 7904127,
-    "grass_color": 8388863,
+    "fog_color": 16777215,
+    "foliage_color": 16777215,
+    "grass_color": 16777215,
     "mood_sound": {
       "block_search_extent": 12,
       "offset": 2.0,
       "sound": "minecraft:ambient.cave",
       "tick_delay": 6000
-    },
-    "ambient_sound": "minecraft:ambient.cave.loop",
-    "additions_sound": {
-      "sound": "minecraft:ambient.cave.additions",
-      "tick_chance": 0.005
     },
     "music": {
       "max_delay": 24000,
@@ -93,9 +88,6 @@
     ],
     [
       "minecraft:glow_lichen",
-      "minecraft:patch_tall_grass_2",
-      "minecraft:patch_grass_plain",
-      "futuremod:azure_frostpine_trees",
       "futuremod:azure_moss_patch",
       "futuremod:azure_moss_ceiling_vegetation",
       "futuremod:azure_moss_vegetation",
@@ -103,6 +95,7 @@
       "minecraft:spore_blossom"
     ],
     [
+      "futuremod:creative_realm_snow_layer",
       "minecraft:freeze_top_layer"
     ]
   ],
