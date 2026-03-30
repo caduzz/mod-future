@@ -18,7 +18,7 @@
     "surface": "ceiling",
     "vegetation_chance": 0.06,
     "vegetation_feature": {
-      "feature": "minecraft:cave_vine_in_moss",
+      "feature": "futuremod:future_cave_vines",
       "placement": []
     },
     "vertical_range": 5,

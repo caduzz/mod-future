@@ -15,42 +15,33 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.client.event.RegisterGuiLayersEvent;
 
-/** HUD com icone de habilidade ativa e icone de cooldown. */
 @EventBusSubscriber(modid = FutureMod.MOD_ID, value = Dist.CLIENT, bus = EventBusSubscriber.Bus.MOD)
-public final class InfiniteVoidDomainHud {
+public final class PurpleVoidHud {
 
-    private static final ItemStack ACTIVE_ICON = new ItemStack(Items.ENDER_EYE);
-    private static final ItemStack COOLDOWN_ICON = new ItemStack(Items.ENDER_PEARL);
+    private static final ItemStack COOLDOWN_ICON = new ItemStack(Items.AMETHYST_SHARD);
 
-    private InfiniteVoidDomainHud() {
+    private PurpleVoidHud() {
     }
 
     @SubscribeEvent
     public static void onRegisterGuiLayers(RegisterGuiLayersEvent event) {
         event.registerAboveAll(
-                ResourceLocation.fromNamespaceAndPath(FutureMod.MOD_ID, "infinite_void_domain_hud"),
+                ResourceLocation.fromNamespaceAndPath(FutureMod.MOD_ID, "purple_void_hud"),
                 new LayeredDraw.Layer() {
                     @Override
                     public void render(GuiGraphics gui, DeltaTracker deltaTracker) {
                         Minecraft mc = Minecraft.getInstance();
-                        if (mc.player == null || mc.options.hideGui) return;
-                        if (!InfiniteVoidClientState.isActive() && !InfiniteVoidClientState.isOnCooldown()) return;
-
-                        int x = 10;
+                        if (mc.player == null || mc.options.hideGui) {
+                            return;
+                        }
+                        if (!PurpleVoidClientState.isOnCooldown()) {
+                            return;
+                        }
+                        int x = 100;
                         int y = 10;
-
-                        if (InfiniteVoidClientState.isActive()) {
-                            drawIconFrame(gui, x, y, 0x6526ed40);
-                            gui.renderItem(ACTIVE_ICON, x + 2, y + 2);
-                            gui.drawString(mc.font, "VOID " + InfiniteVoidClientState.activeSeconds() + "s", x + 24, y + 7, 0x6526ed, true);
-                            y += 24;
-                        }
-
-                        if (InfiniteVoidClientState.isOnCooldown()) {
-                            drawIconFrame(gui, x, y, 0x90000040);
-                            gui.renderItem(COOLDOWN_ICON, x + 2, y + 2);
-                            gui.drawString(mc.font, "CD " + InfiniteVoidClientState.cooldownSeconds() + "s", x + 24, y + 7, 0x900000, true);
-                        }
+                        drawIconFrame(gui, x, y, 0xA0401040);
+                        gui.renderItem(COOLDOWN_ICON, x + 2, y + 2);
+                        gui.drawString(mc.font, "P.VOID CD " + PurpleVoidClientState.cooldownSeconds() + "s", x + 24, y + 7, 0xD090FF, true);
                     }
                 });
     }

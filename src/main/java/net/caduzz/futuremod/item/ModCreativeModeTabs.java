@@ -17,7 +17,7 @@ public class ModCreativeModeTabs {
 
   public static final Supplier<CreativeModeTab> BISMUTH_ITEMS_TABS = CREATIVE_MODE_TAB.register("bismuth_items_tab", 
     () -> CreativeModeTab.builder().icon(() -> new ItemStack(ModItems.INGOT_BISMUTH.get()))
-      .title(Component.translatable("creativetab.futuremod.bismuth_items"))
+      .title(Component.translatable("creativetab.futuremod.futuremod_items"))
       .displayItems(
         (itemDisplayParamenters, output) -> {
           output.accept(ModItems.INGOT_BISMUTH);   
@@ -53,7 +53,7 @@ public class ModCreativeModeTabs {
 
     public static final Supplier<CreativeModeTab> BISMUTH_EQUIPMENTS_TABS = CREATIVE_MODE_TAB.register("bismuth_equipments_tab", 
     () -> CreativeModeTab.builder().icon(() -> new ItemStack(ModItems.BISMUTH_HELMET.get()))
-      .title(Component.translatable("creativetab.futuremod.equipments_items"))
+      .title(Component.translatable("creativetab.futuremod.futuremod_equipments"))
       .displayItems(
         (itemDisplayParamenters, output) -> {
           output.accept(ModItems.BISMUTH_HELMET);
@@ -63,6 +63,7 @@ public class ModCreativeModeTabs {
           output.accept(ModItems.JETPACK);
           output.accept(ModItems.BISMUTH_WARDEN_SPAWN_EGG);
           output.accept(ModItems.REGENERATION_RELIC);
+          output.accept(ModItems.PURPLE_VOID_RELIC);
           output.accept(ModItems.CIGARETTE);
           output.accept(ModItems.BISMUTH_SWORD);
           output.accept(ModItems.BISMUTH_AXE);

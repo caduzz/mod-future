@@ -1,6 +1,7 @@
 package net.caduzz.futuremod.event;
 
 import net.caduzz.futuremod.FutureMod;
+import net.caduzz.futuremod.client.InfiniteVoidClientState;
 import net.caduzz.futuremod.item.ModItems;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
@@ -33,6 +34,13 @@ public class ModSoundEvents {
     public static void onPlaySound(PlaySoundEvent event) {
         Player player = Minecraft.getInstance().player;
         if (player == null || event.getOriginalSound() == null) return;
+        if (InfiniteVoidClientState.isActive()) {
+            SoundSource src = event.getOriginalSound().getSource();
+            if (src == SoundSource.HOSTILE || src == SoundSource.NEUTRAL) {
+                event.setSound(null);
+                return;
+            }
+        }
         String path;
         try {
             path = event.getOriginalSound().getLocation().getPath();

@@ -55,7 +55,7 @@ neoForge {
         client1 {
             client()
             gameDirectory = project.file('run/client1')
-            programArguments.addAll '--username', 'Gojo'
+            programArguments.addAll '--username', 'Geto'
             systemProperty 'neoforge.enabledGameTestNamespaces', project.mod_id
         }
 
@@ -147,10 +147,6 @@ dependencies {
     // Example project dependency using a sister or child project:
     // implementation project(":myproject")
 
-    // Curios API (opcional) - para slot de relíquia no estilo Artifacts, adicione o jar do Curios em run/mods
-    // compileOnly "curse.maven:curios-309927:6076118"
-    // localRuntime "curse.maven:curios-309927:6076118"
-
     // For more info:
     // http://www.gradle.org/docs/current/userguide/artifact_dependencies_tutorial.html
     // http://www.gradle.org/docs/current/userguide/dependency_management.html
@@ -179,6 +175,18 @@ var generateModMetadata = tasks.register("generateModMetadata", ProcessResources
 sourceSets.main.resources.srcDir generateModMetadata
 // To avoid having to run "generateModMetadata" manually, make it run on every project reload
 neoForge.ideSyncTask generateModMetadata
+
+// Aliases em PT (tarefas NeoForge sao em ingles: runClient, runServer)
+tasks.register("runCliente") {
+    group = "NeoForge"
+    description = "Alias para runClient."
+    dependsOn("runClient")
+}
+tasks.register("runServidor") {
+    group = "NeoForge"
+    description = "Alias para runServer."
+    dependsOn("runServer")
+}
 
 // Example configuration to allow publishing using the maven-publish plugin
 publishing {

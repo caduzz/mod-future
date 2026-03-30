@@ -8,7 +8,7 @@ import net.neoforged.neoforge.items.ItemStackHandler;
 
 import java.util.function.Supplier;
 
-/** Slot dedicado à relíquia no jogador (funciona sem Curios). */
+/** Slot dedicado à relíquia no jogador. */
 public final class RelicSlotAttachment {
 
         public static final DeferredRegister<AttachmentType<?>> ATTACHMENT_TYPES = DeferredRegister

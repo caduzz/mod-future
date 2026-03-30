@@ -8,10 +8,10 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 
-/** Baú pequeno: um slot de equipar em cima e o inventário em baixo. */
+/** Dois slots de relíquia do mod no topo; inventário em baixo. */
 public class RelicSlotScreen extends AbstractContainerScreen<RelicSlotMenu> {
 
-    /** Texture da GUI: coloque sua imagem em assets/futuremod/textures/gui/relic_slot.png (176×132 px). */
+    /** Textura da GUI: assets/futuremod/textures/gui/relic_slot.png (176×132 px). */
     private static final ResourceLocation TEXTURE =
             ResourceLocation.fromNamespaceAndPath(FutureMod.MOD_ID, "textures/gui/relic_slot.png");
 

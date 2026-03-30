@@ -89,8 +89,7 @@
       "minecraft:glow_lichen",
       "futuremod:future_moss_vegetation",
       "futuremod:future_moss_ceiling_vegetation",
-      "minecraft:spore_blossom",
-      "minecraft:classic_vines_cave_feature"
+      "minecraft:spore_blossom"
     ],
     [
       "minecraft:freeze_top_layer"

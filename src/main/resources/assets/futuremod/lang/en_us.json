@@ -21,9 +21,9 @@
   "biome.futuremod.creative_realm_forest": "Creative Realm Forest",
   "biome.futuremod.creative_realm_moss": "Creative Realm Moss",
 
-  "creativetab.futuremod.bismuth_blocks": "Bismuth Blocks",
-  "creativetab.futuremod.bismuth_items": "Bismuth Items",
-  "creativetab.futuremod.equipments_items": "Bismuth Equipments",
+  "creativetab.futuremod.bismuth_blocks": "FutureMod Blocks",
+  "creativetab.futuremod.futuremod_items": "FutureMod Items",
+  "creativetab.futuremod.futuremod_equipments": "FutureMod Equipments",
 
 
   "item.futuremod.bismuth_helmet": "カドゥ Helmet",
@@ -40,21 +40,18 @@
   "item.futuremod.bismuth_pickaxe": "Bismuth Pickaxe",
   "item.futuremod.bismuth_warden_spawn_egg": "Bismuth Warden Spawn Egg",
   "item.futuremod.regeneration_relic": "カドゥ Relic",
+  "item.futuremod.purple_void_relic": "Purple Void Relic",
   "item.futuremod.cigarette": "Cigarette",
   "item.futuremod.future_glow_berries": "Future Glow Berries",
   "item.futuremod.future_sweet_berries": "Future Sweet Berries",
   "entity.futuremod.bismuth_warden": "Bismuth Warden",
 
-  "container.futuremod.relic_slot": "Relic Slot",
+  "container.futuremod.relic_slot": "Mod Relics",
 
-  "tooltip.futuremod.slot.relic": "Relic Slot",
+  "tooltip.futuremod.slot.relic": "Regeneration relic slot (mod menu, H)",
+  "tooltip.futuremod.slot.purple_void": "Purple Void relic slot (mod menu, H)",
   "tooltip.futuremod.relic.when_equipped": "When equipped:",
-  "tooltip.futuremod.relic.effect_attack_speed": "+20% Attack Speed",
-  "tooltip.futuremod.relic.effect_armor": "+20% Armor",
-  "tooltip.futuremod.relic.effect_attack_damage": "+20% Attack Damage",
-  "tooltip.futuremod.relic.effect_armor_toughness": "+20% Armor Toughness",
-  "tooltip.futuremod.relic.effect_knockback_resistance": "+20% Knockback Resistance",
-  "tooltip.futuremod.relic.effect_speed": "+40% Speed",
+  "tooltip.futuremod.relic.unlocks_domain": "Libera a expansão de domínio (Vazio Infinito).",
 
   "tooltip.futuremod.slot.helmet": "Helmet",
   "tooltip.futuremod.slot.chestplate": "Chestplate",
@@ -62,10 +59,22 @@
   "tooltip.futuremod.slot.boots": "Boots",
 
   "key.categories.futuremod": "Futuremod Category",
-  "key.futuremod.relic_slot": "Open Relic Slot",
-  "key.futuremod.infinite_void_domain": "Activate Infinite Void Domain",
+  "key.futuremod.relic_slot": "Open Mod Relic Slots",
+  "key.futuremod.purple_void": "Cast Purple Void",
+  "key.futuremod.infinite_void_domain": "Toggle Infinite Void Domain (V: cancel while active)",
 
   "message.futuremod.infinite_void_domain.activated": "Muryokuso - Infinite Void unleashed.",
   "message.futuremod.infinite_void_domain.already_active": "Your domain is already active.",
-  "message.futuremod.infinite_void_domain.cooldown": "Infinite Void is on cooldown for %s seconds."
+  "message.futuremod.infinite_void_domain.cooldown": "Infinite Void is on cooldown for %s seconds.",
+  "message.futuremod.infinite_void_domain.requires_relic": "Infinite Void requires カドゥ Relic equipped in the Relic slot.",
+  "message.futuremod.infinite_void_domain.cancelled": "Domínio do Vazio Infinito encerrado.",
+
+  "message.futuremod.purple_void.activated": "Purple Void.",
+  "message.futuremod.purple_void.cooldown": "Purple Void is on cooldown for %s seconds.",
+  "tooltip.futuremod.purple_void_relic.unlock": "Libera o purlple void (Vazio Roxo).",
+  "message.futuremod.purple_void.requires_relic": "Purple Void requires the Purple Void Relic in the mod relic menu (H).",
+
+  "death.attack.futuremod.purple_void": "%1$s was unmade by Purple Void",
+
+  "tooltip.futuremod.purple_void_relic.desc": "Offensive domain technique. Equip in the Purple Void slot of the mod relic menu (H), cast with the Purple Void key."
 }

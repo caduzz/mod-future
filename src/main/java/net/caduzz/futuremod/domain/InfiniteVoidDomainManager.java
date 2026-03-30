@@ -7,7 +7,11 @@ import java.util.UUID;
 
 import net.caduzz.futuremod.Config;
 import net.caduzz.futuremod.block.ModBlocks;
+import net.caduzz.futuremod.item.ModItems;
+import net.caduzz.futuremod.relic.RelicSlotAttachment;
 import net.minecraft.core.BlockPos;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -20,6 +24,7 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 
@@ -45,7 +50,14 @@ public final class InfiniteVoidDomainManager {
     public enum ActivateResult {
         ACTIVATED,
         ALREADY_ACTIVE,
-        ON_COOLDOWN
+        ON_COOLDOWN,
+        /** Precisa da Relíquia da Regeneração no slot de relíquia do mod. */
+        REQUIRES_REGENERATION_RELIC
+    }
+
+    public enum CancelResult {
+        CANCELLED,
+        NOT_ACTIVE
     }
 
     private InfiniteVoidDomainManager() {
@@ -55,16 +67,59 @@ public final class InfiniteVoidDomainManager {
         return player.getData(InfiniteVoidDomainAttachment.INFINITE_VOID_DOMAIN.get());
     }
 
+    private static boolean hasRegenerationRelicEquipped(ServerPlayer player) {
+        ItemStack stack = player.getData(RelicSlotAttachment.RELIC_SLOT.get()).getStackInSlot(0);
+        return !stack.isEmpty() && stack.is(ModItems.REGENERATION_RELIC.get());
+    }
+
     public static ActivateResult tryActivate(ServerPlayer player) {
         InfiniteVoidDomainData domainData = data(player);
         if (domainData.isActive()) return ActivateResult.ALREADY_ACTIVE;
         if (!domainData.canActivate()) return ActivateResult.ON_COOLDOWN;
+        if (!hasRegenerationRelicEquipped(player)) {
+            return ActivateResult.REQUIRES_REGENERATION_RELIC;
+        }
 
         domainData.activate(
                 Config.INFINITE_VOID_DURATION_SECONDS.get() * 20,
                 Config.INFINITE_VOID_COOLDOWN_SECONDS.get() * 20);
         createDomainShell(player);
+        ServerLevel level = player.serverLevel();
+        level.playSound(
+                null,
+                player.getX(),
+                player.getY(),
+                player.getZ(),
+                SoundEvents.RESPAWN_ANCHOR_CHARGE,
+                SoundSource.PLAYERS,
+                1.35f,
+                0.55f);
         return ActivateResult.ACTIVATED;
+    }
+
+    /** Mesma tecla (V): encerra dominio, restaura mundo e aplica cooldown. */
+    public static CancelResult tryCancelEarly(ServerPlayer player) {
+        InfiniteVoidDomainData domainData = data(player);
+        if (!domainData.isActive()) {
+            return CancelResult.NOT_ACTIVE;
+        }
+        clearDomainShell(player);
+        domainData.endEarlyWithCooldown(Config.INFINITE_VOID_COOLDOWN_SECONDS.get() * 20);
+        MinecraftServer server = player.getServer();
+        if (server != null) {
+            tickActiveDomains(server);
+        }
+        ServerLevel level = player.serverLevel();
+        level.playSound(
+                null,
+                player.getX(),
+                player.getY(),
+                player.getZ(),
+                SoundEvents.PORTAL_TRIGGER,
+                SoundSource.PLAYERS,
+                0.6f,
+                1.4f);
+        return CancelResult.CANCELLED;
     }
 
     /**
@@ -299,18 +354,20 @@ public final class InfiniteVoidDomainManager {
     }
 
     private static void playAmbientSound(ServerLevel level, Vec3 center, int elapsedTicks) {
-        if (elapsedTicks % 20 != 0) {
+        // Menos frequente + som baixo: sensação de espaço vazio (antes: âncora de respawn).
+        if (elapsedTicks % 40 != 0) {
             return;
         }
+        float pitch = 0.32f + level.random.nextFloat() * 0.08f;
         level.playSound(
                 null,
                 center.x,
                 center.y,
                 center.z,
-                net.minecraft.sounds.SoundEvents.RESPAWN_ANCHOR_AMBIENT,
-                net.minecraft.sounds.SoundSource.PLAYERS,
-                1.2f,
-                0.55f);
+                SoundEvents.END_PORTAL_FRAME_FILL,
+                SoundSource.PLAYERS,
+                0.22f,
+                pitch);
     }
 
     private static void createDomainShell(ServerPlayer owner) {
@@ -354,6 +411,39 @@ public final class InfiniteVoidDomainManager {
         ServerLevel level = owner.serverLevel();
         for (Map.Entry<BlockPos, BlockState> entry : shell.previousStates().entrySet()) {
             level.setBlock(entry.getKey(), entry.getValue(), 3);
+        }
+        Vec3 c = domainCenterFromShell(shell);
+        int scan = shell.radius() + 4;
+        List<ServerPlayer> nearby = level.getEntitiesOfClass(
+                ServerPlayer.class,
+                new AABB(c, c).inflate(scan),
+                Entity::isAlive);
+        for (ServerPlayer p : nearby) {
+            nudgePlayerOutOfSolidBlocks(p, level);
+        }
+    }
+
+    /**
+     * Apos restaurar blocos do domínio, sobe o jogador até o AABB não colidir (evita nascer dentro de void_black / pedra).
+     */
+    private static void nudgePlayerOutOfSolidBlocks(ServerPlayer player, ServerLevel level) {
+        if (level.noCollision(player, player.getBoundingBox())) {
+            return;
+        }
+        double x = player.getX();
+        double z = player.getZ();
+        double baseY = player.getY();
+        float yRot = player.getYRot();
+        float xRot = player.getXRot();
+        for (int step = 1; step <= 64; step++) {
+            double y = baseY + step;
+            player.moveTo(x, y, z, yRot, xRot);
+            if (level.noCollision(player, player.getBoundingBox())) {
+                player.setDeltaMovement(Vec3.ZERO);
+                player.fallDistance = 0.0f;
+                player.hurtMarked = true;
+                return;
+            }
         }
     }
 

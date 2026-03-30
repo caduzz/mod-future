@@ -8,12 +8,17 @@ import net.caduzz.futuremod.block.ModBlocks;
 import net.caduzz.futuremod.client.DomainFreezeClientState;
 import net.caduzz.futuremod.client.InfiniteVoidClientState;
 import net.caduzz.futuremod.client.ModKeyBindings;
+import net.caduzz.futuremod.client.PurpleVoidClientState;
+import net.caduzz.futuremod.client.PurpleVoidOrbRenderer;
 import net.caduzz.futuremod.command.ModCommands;
 import net.caduzz.futuremod.domain.InfiniteVoidDomainAttachment;
 import net.caduzz.futuremod.menu.ModMenuTypes;
 import net.caduzz.futuremod.network.ActivateInfiniteVoidDomainPayload;
+import net.caduzz.futuremod.network.ActivatePurpleVoidPayload;
 import net.caduzz.futuremod.network.OpenRelicMenuPayload;
 import net.caduzz.futuremod.network.ModPayloadHandlers;
+import net.caduzz.futuremod.purplevoid.PurpleVoidAttachment;
+import net.caduzz.futuremod.relic.PurpleSlotAttachment;
 import net.caduzz.futuremod.relic.RelicSlotAttachment;
 import net.caduzz.futuremod.entity.BismuthWarden;
 import net.caduzz.futuremod.entity.ModEntities;
@@ -21,7 +26,6 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.client.renderer.entity.WardenRenderer;
 import net.caduzz.futuremod.item.ModArmorMaterials;
 import net.caduzz.futuremod.item.ModCreativeModeTabs;
-import net.caduzz.futuremod.integration.CuriosHelper;
 import net.caduzz.futuremod.item.ModItems;
 import net.caduzz.futuremod.client.RelicSlotScreen;
 import net.minecraft.client.gui.screens.inventory.AnvilScreen;
@@ -92,7 +96,9 @@ public class FutureMod {
         ModEntities.register(modEventBus);
         ModArmorMaterials.ARMOR_MATERIALS.register(modEventBus);
         RelicSlotAttachment.ATTACHMENT_TYPES.register(modEventBus);
+        PurpleSlotAttachment.ATTACHMENT_TYPES.register(modEventBus);
         InfiniteVoidDomainAttachment.ATTACHMENT_TYPES.register(modEventBus);
+        PurpleVoidAttachment.ATTACHMENT_TYPES.register(modEventBus);
         ModPayloadHandlers.register(modEventBus);
         
         modEventBus.addListener(this::addCreative);
@@ -137,6 +143,7 @@ public class FutureMod {
         @SubscribeEvent
         public static void onClientTick(ClientTickEvent.Post event) {
             InfiniteVoidClientState.tick();
+            PurpleVoidClientState.tick();
             Minecraft mc = Minecraft.getInstance();
             if (DomainFreezeClientState.isFrozen() && mc.player != null && mc.player.input != null) {
                 mc.player.input.forwardImpulse = 0.0f;
@@ -150,6 +157,9 @@ public class FutureMod {
             }
             if (ModKeyBindings.INFINITE_VOID_DOMAIN_KEY.consumeClick()) {
                 PacketDistributor.sendToServer(new ActivateInfiniteVoidDomainPayload());
+            }
+            if (ModKeyBindings.PURPLE_VOID_KEY.consumeClick()) {
+                PacketDistributor.sendToServer(new ActivatePurpleVoidPayload());
             }
         }
 }
@@ -187,6 +197,7 @@ public class FutureMod {
         @SubscribeEvent
         static void registerEntityRenderers(EntityRenderersEvent.RegisterRenderers event) {
             event.registerEntityRenderer(ModEntities.BISMUTH_WARDEN.get(), WardenRenderer::new);
+            event.registerEntityRenderer(ModEntities.PURPLE_VOID_ORB.get(), PurpleVoidOrbRenderer::new);
         }
 
         /** Cor rosa-roxa (#ffa6c5) para os blocos de musgo do FutureMod. */
@@ -221,7 +232,7 @@ public class FutureMod {
 
         private static final Component RELIC_SLOT_LORE = Component.literal("Uma reliquia que perteceu a カドゥ").withStyle(ChatFormatting.RED);
 
-        /** Linha "Slot: [nome]" no estilo Curios (Slot: em dourado, nome do slot em amarelo). */
+        /** Linha "Slot: [nome]" (Slot: dourado, nome do slot em amarelo). */
         private static void addSlotTooltip(java.util.List<Component> tooltip, String slotKey) {
             Component line = Component.literal("Slot: ").withStyle(ChatFormatting.GOLD)
                     .append(Component.translatable(slotKey).withStyle(ChatFormatting.YELLOW));
@@ -239,19 +250,28 @@ public class FutureMod {
                     event.getToolTip().add(1, KADOU_LORE);
                 }
             }
+            if (stack.is(ModItems.PURPLE_VOID_RELIC.get())) {
+                addSlotTooltip(event.getToolTip(), "tooltip.futuremod.slot.purple_void");
+                if (!event.getToolTip().stream().anyMatch(c -> c.getString().contains("Purple Void"))) {
+                    event.getToolTip().add(
+                            Component.translatable("tooltip.futuremod.purple_void_relic.desc")
+                                    .withStyle(ChatFormatting.LIGHT_PURPLE));
+                }
+                if (event.getToolTip().stream().map(Component::getString).noneMatch(s -> s.contains("Vazio Roxo"))) {
+                    event.getToolTip().add(
+                            Component.translatable("tooltip.futuremod.purple_void_relic.unlock")
+                                    .withStyle(ChatFormatting.LIGHT_PURPLE));
+                }
+            }
             if (stack.is(ModItems.REGENERATION_RELIC.get())) {
                 if (!event.getToolTip().contains(RELIC_SLOT_LORE)) {
                     event.getToolTip().add(1, RELIC_SLOT_LORE);
                 }
-                addSlotTooltip(event.getToolTip(), "tooltip.futuremod.slot.relic");
-                if (!event.getToolTip().stream().anyMatch(c -> c.getString().contains("When equipped") || c.getString().contains("Equipado"))) {
-                    event.getToolTip().add(Component.translatable("tooltip.futuremod.relic.when_equipped").withStyle(ChatFormatting.DARK_AQUA));
-                    event.getToolTip().add(Component.translatable("tooltip.futuremod.relic.effect_attack_speed").withStyle(ChatFormatting.BLUE));
-                    event.getToolTip().add(Component.translatable("tooltip.futuremod.relic.effect_armor").withStyle(ChatFormatting.BLUE));
-                    event.getToolTip().add(Component.translatable("tooltip.futuremod.relic.effect_attack_damage").withStyle(ChatFormatting.BLUE));
-                    event.getToolTip().add(Component.translatable("tooltip.futuremod.relic.effect_armor_toughness").withStyle(ChatFormatting.BLUE));
-                    event.getToolTip().add(Component.translatable("tooltip.futuremod.relic.effect_knockback_resistance").withStyle(ChatFormatting.BLUE));
-                    event.getToolTip().add(Component.translatable("tooltip.futuremod.relic.effect_speed").withStyle(ChatFormatting.BLUE));
+
+                if (event.getToolTip().stream().map(Component::getString).noneMatch(s -> s.contains("Vazio Infinito"))) {
+                    event.getToolTip().add(
+                            Component.translatable("tooltip.futuremod.relic.unlocks_domain")
+                                    .withStyle(ChatFormatting.LIGHT_PURPLE));
                 }
             }
             if (stack.is(ModItems.BISMUTH_HELMET.get())) addSlotTooltip(event.getToolTip(), "tooltip.futuremod.slot.helmet");
@@ -332,11 +352,16 @@ public class FutureMod {
                 ItemStack armorChestplate = player.getItemBySlot(EquipmentSlot.CHEST);
                 ItemStack armorHelmet = player.getItemBySlot(EquipmentSlot.HEAD);
 
-                // Relíquia: slot próprio do mod (tecla R) ou Curios, se instalado
-                ItemStack inRelicSlot = player.getData(RelicSlotAttachment.RELIC_SLOT.get()).getStackInSlot(0);
-                boolean hasRelic = CuriosHelper.findFirstCurio(player, ModItems.REGENERATION_RELIC.get())
-                        || (!inRelicSlot.isEmpty() && inRelicSlot.is(ModItems.REGENERATION_RELIC.get()));
-                boolean hasBismuthChestplate = armorChestplate.getItem() == ModItems.BISMUTH_CHESTPLATE.get();
+                ItemStack relicSlotStack = player
+                        .getData(RelicSlotAttachment.RELIC_SLOT.get())
+                        .getStackInSlot(0);
+
+                boolean hasRelic =
+                        !relicSlotStack.isEmpty() && relicSlotStack.is(ModItems.REGENERATION_RELIC.get());
+
+                // Armadura
+                boolean hasBismuthChestplate =
+                        armorChestplate.is(ModItems.BISMUTH_CHESTPLATE.get());
 
                 // Bônus % por fonte: relíquia e peitoral têm IDs diferentes, então os % stackam (ex.: +20% + 20% = 1,2 × 1,2)
                 applyOrRemovePercentModifiers(player, "relic", hasRelic);

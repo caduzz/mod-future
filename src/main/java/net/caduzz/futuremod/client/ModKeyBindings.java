@@ -13,7 +13,7 @@ import com.mojang.blaze3d.platform.InputConstants;
     bus = EventBusSubscriber.Bus.MOD
 )
 public class ModKeyBindings {
-    /** Abre o menu do slot de relíquia (equipar Relíquia da Regeneração). */
+    /** Abre o menu dos slots de relíquia do mod (Regeneração + Purple Void). */
     public static final KeyMapping RELIC_SLOT_KEY = new KeyMapping(
         "key.futuremod.relic_slot",
         InputConstants.KEY_H,
@@ -27,9 +27,17 @@ public class ModKeyBindings {
         "key.categories.futuremod"
     );
 
+    /** Dispara a habilidade Purple Void (com relíquia no slot do menu de relíquias). */
+    public static final KeyMapping PURPLE_VOID_KEY = new KeyMapping(
+        "key.futuremod.purple_void",
+        InputConstants.KEY_J,
+        "key.categories.futuremod"
+    );
+
     @SubscribeEvent
     public static void register(RegisterKeyMappingsEvent event) {
       event.register(RELIC_SLOT_KEY);
       event.register(INFINITE_VOID_DOMAIN_KEY);
+      event.register(PURPLE_VOID_KEY);
     }
 }

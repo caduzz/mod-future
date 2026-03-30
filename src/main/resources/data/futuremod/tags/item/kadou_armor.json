@@ -1,0 +1,9 @@
+{
+  "replace": false,
+  "values": [
+    "futuremod:bismuth_helmet",
+    "futuremod:bismuth_chestplate",
+    "futuremod:bismuth_leggings",
+    "futuremod:bismuth_boots"
+  ]
+}

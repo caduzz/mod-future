@@ -16,8 +16,9 @@ public class ModArmorMaterials {
     public static final DeferredRegister<ArmorMaterial> ARMOR_MATERIALS = DeferredRegister
             .create(net.minecraft.core.registries.Registries.ARMOR_MATERIAL, FutureMod.MOD_ID);
 
-    public static final DeferredHolder<ArmorMaterial, ArmorMaterial> BISMUTH =
-        ARMOR_MATERIALS.register("bismuth", () ->
+    /** Registro `futuremod:kadou`; texturas de camada seguem `bismuth_layer_*` em assets. */
+    public static final DeferredHolder<ArmorMaterial, ArmorMaterial> KADOU =
+        ARMOR_MATERIALS.register("kadou", () ->
             new ArmorMaterial(
                 Map.of(
                     ArmorItem.Type.HELMET, 3,
@@ -30,10 +31,7 @@ public class ModArmorMaterials {
                 () -> Ingredient.of(ModItems.INGOT_BISMUTH.get()),
                 List.of(
                     new ArmorMaterial.Layer(
-                        ResourceLocation.fromNamespaceAndPath(
-                            FutureMod.MOD_ID, "bismuth"
-                        )
-                    )
+                        ResourceLocation.fromNamespaceAndPath(FutureMod.MOD_ID, "bismuth"))
                 ),
                 1.0f,
                 0.0f

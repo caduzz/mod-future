@@ -245,7 +245,7 @@ public class ModItems {
         .add(Attributes.MOVEMENT_SPEED,
             new AttributeModifier(
                 ResourceLocation.fromNamespaceAndPath(FutureMod.MOD_ID, "bismuth_boots_speed"),
-                0.2,
+                0.02,
                 AttributeModifier.Operation.ADD_VALUE
             ),
             EquipmentSlotGroup.FEET
@@ -307,26 +307,26 @@ public class ModItems {
 
   public static final DeferredItem<ArmorItem> BISMUTH_HELMET = ITEMS.register("bismuth_helmet",
       () -> new BismuthAnvilOnlyArmorItem(
-          ModArmorMaterials.BISMUTH,
+          ModArmorMaterials.KADOU,
           ArmorItem.Type.HELMET,
           kadouArmorProperties(createBismuthHelmetAttributes())));
 
   public static final DeferredItem<ArmorItem> BISMUTH_CHESTPLATE =
       ITEMS.register("bismuth_chestplate",
           () -> new BismuthAnvilOnlyArmorItem(
-              ModArmorMaterials.BISMUTH,
+              ModArmorMaterials.KADOU,
               ArmorItem.Type.CHESTPLATE,
               kadouArmorProperties(createBismuthChestplateAttributes())));
 
   public static final DeferredItem<ArmorItem> BISMUTH_LEGGINGS = ITEMS.register("bismuth_leggings",
       () -> new BismuthAnvilOnlyArmorItem(
-          ModArmorMaterials.BISMUTH,
+          ModArmorMaterials.KADOU,
           ArmorItem.Type.LEGGINGS,
           kadouArmorProperties(createBismuthLeggingsAttributes())));
 
   public static final DeferredItem<ArmorItem> BISMUTH_BOOTS = ITEMS.register("bismuth_boots",
       () -> new BismuthAnvilOnlyArmorItem(
-          ModArmorMaterials.BISMUTH,
+          ModArmorMaterials.KADOU,
           ArmorItem.Type.BOOTS,
           kadouArmorProperties(createBismuthBootsAttributes())));
 
@@ -343,8 +343,12 @@ public class ModItems {
           0x5a7a6e,
           new Item.Properties()));
 
-  /** Relíquia que substitui os efeitos de regeneração/resistência da peitoral de bismuto. Equipa no slot Curios (charm). */
+  /** Relíquia que substitui os efeitos de regeneração/resistência da peitoral de bismuto. Equipa no slot de relíquia do mod (tecla configurável). */
   public static final DeferredItem<Item> REGENERATION_RELIC = ITEMS.register("regeneration_relic",
+      () -> new Item(new Item.Properties().stacksTo(1).rarity(net.caduzz.futuremod.ModEnumParams.RED_RARITY_PROXY.getValue())));
+
+  /** Relíquia do Vazio Roxo: habilidade ofensiva (slot H + tecla de ativação). */
+  public static final DeferredItem<Item> PURPLE_VOID_RELIC = ITEMS.register("purple_void_relic",
       () -> new Item(new Item.Properties().stacksTo(1).rarity(net.caduzz.futuremod.ModEnumParams.RED_RARITY_PROXY.getValue())));
 
   /** Cigarro: fumar teleporta para a Creative Realm (ou de volta ao Overworld). */

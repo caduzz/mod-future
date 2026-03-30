@@ -1,0 +1,7 @@
+{
+  "message_id": "futuremod.purple_void",
+  "scaling": "when_caused_by_living_non_player",
+  "exhaustion": 0.0,
+  "effects": "poking",
+  "death_message_type": "default"
+}

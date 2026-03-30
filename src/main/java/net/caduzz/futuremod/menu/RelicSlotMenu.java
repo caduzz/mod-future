@@ -1,6 +1,7 @@
 package net.caduzz.futuremod.menu;
 
 import net.caduzz.futuremod.item.ModItems;
+import net.caduzz.futuremod.relic.PurpleSlotAttachment;
 import net.caduzz.futuremod.relic.RelicSlotAttachment;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -11,30 +12,44 @@ import net.neoforged.neoforge.items.IItemHandler;
 import net.neoforged.neoforge.items.ItemStackHandler;
 import net.neoforged.neoforge.items.SlotItemHandler;
 
+/** Dois slots do mod: Regeneração (0) e Purple Void (1), mais inventário do jogador. */
 public class RelicSlotMenu extends AbstractContainerMenu {
 
-    /** Construtor no cliente: inventário dummy para sincronizar. */
+    private static final int REGEN_SLOT_INDEX = 0;
+    private static final int PURPLE_SLOT_INDEX = 1;
+    private static final int PLAYER_FIRST_SLOT = 2;
+    private static final int PLAYER_LAST_PLUS_ONE = 38;
+
+    /** Cliente: handlers dummy para sincronizar. */
     public RelicSlotMenu(int containerId, Inventory playerInv) {
-        this(containerId, playerInv, new ItemStackHandler(1));
+        this(containerId, playerInv, new ItemStackHandler(1), new ItemStackHandler(1));
     }
 
-    /** Construtor no servidor: usa o slot de relíquia do jogador. */
+    /** Servidor: anexos reais do jogador. */
     public RelicSlotMenu(int containerId, Inventory playerInv, Player player) {
-        this(containerId, playerInv, player.getData(RelicSlotAttachment.RELIC_SLOT.get()));
+        this(
+                containerId,
+                playerInv,
+                player.getData(RelicSlotAttachment.RELIC_SLOT.get()),
+                player.getData(PurpleSlotAttachment.PURPLE_SLOT.get()));
     }
 
-    private RelicSlotMenu(int containerId, Inventory playerInv, IItemHandler relicHandler) {
+    private RelicSlotMenu(int containerId, Inventory playerInv, IItemHandler regenHandler, IItemHandler purpleHandler) {
         super(ModMenuTypes.RELIC_SLOT.get(), containerId);
 
-        // Slot de equipar (relíquia) em cima, no centro — como um baú de 1 linha
-        this.addSlot(new SlotItemHandler(relicHandler, 0, 80, 18) {
+        this.addSlot(new SlotItemHandler(regenHandler, 0, 62, 18) {
             @Override
             public boolean mayPlace(ItemStack stack) {
                 return !stack.isEmpty() && stack.is(ModItems.REGENERATION_RELIC.get());
             }
         });
+        this.addSlot(new SlotItemHandler(purpleHandler, 0, 98, 18) {
+            @Override
+            public boolean mayPlace(ItemStack stack) {
+                return !stack.isEmpty() && stack.is(ModItems.PURPLE_VOID_RELIC.get());
+            }
+        });
 
-        // Inventário do jogador em baixo (como ao abrir um baú)
         for (int row = 0; row < 3; row++) {
             for (int col = 0; col < 9; col++) {
                 this.addSlot(new Slot(playerInv, col + row * 9 + 9, 8 + col * 18, 50 + row * 18));
@@ -57,17 +72,32 @@ public class RelicSlotMenu extends AbstractContainerMenu {
         if (slot != null && slot.hasItem()) {
             ItemStack stackInSlot = slot.getItem();
             stack = stackInSlot.copy();
-            if (index == 0) {
-                if (!this.moveItemStackTo(stackInSlot, 1, 37, true)) return ItemStack.EMPTY;
-            } else {
-                if (stackInSlot.is(ModItems.REGENERATION_RELIC.get()) && !this.moveItemStackTo(stackInSlot, 0, 1, false))
+            if (index == REGEN_SLOT_INDEX || index == PURPLE_SLOT_INDEX) {
+                if (!this.moveItemStackTo(stackInSlot, PLAYER_FIRST_SLOT, PLAYER_LAST_PLUS_ONE, true)) {
                     return ItemStack.EMPTY;
-                if (index < 28) {
-                    if (!this.moveItemStackTo(stackInSlot, 28, 37, false)) return ItemStack.EMPTY;
-                } else if (!this.moveItemStackTo(stackInSlot, 1, 28, false)) return ItemStack.EMPTY;
+                }
+            } else {
+                if (stackInSlot.is(ModItems.REGENERATION_RELIC.get())) {
+                    this.moveItemStackTo(stackInSlot, REGEN_SLOT_INDEX, REGEN_SLOT_INDEX + 1, false);
+                }
+                if (!stackInSlot.isEmpty() && stackInSlot.is(ModItems.PURPLE_VOID_RELIC.get())) {
+                    this.moveItemStackTo(stackInSlot, PURPLE_SLOT_INDEX, PURPLE_SLOT_INDEX + 1, false);
+                }
+                if (!stackInSlot.isEmpty()) {
+                    if (index < 29) {
+                        if (!this.moveItemStackTo(stackInSlot, 29, PLAYER_LAST_PLUS_ONE, false)) {
+                            return ItemStack.EMPTY;
+                        }
+                    } else if (!this.moveItemStackTo(stackInSlot, PLAYER_FIRST_SLOT, 29, false)) {
+                        return ItemStack.EMPTY;
+                    }
+                }
             }
-            if (stackInSlot.isEmpty()) slot.set(ItemStack.EMPTY);
-            else slot.setChanged();
+            if (stackInSlot.isEmpty()) {
+                slot.set(ItemStack.EMPTY);
+            } else {
+                slot.setChanged();
+            }
         }
         return stack;
     }

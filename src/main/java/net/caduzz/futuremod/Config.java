@@ -45,6 +45,38 @@ public class Config {
             .comment("Paralysis window in seconds while the domain starts.")
             .defineInRange("infiniteVoid.paralysisSeconds", 45, 40, 60);
 
+    public static final ModConfigSpec.IntValue PURPLE_VOID_COOLDOWN_SECONDS = BUILDER
+            .comment("Cooldown in seconds for Purple Void (H slot ability).")
+            .defineInRange("purpleVoid.cooldownSeconds", 50, 20, 180);
+
+    public static final ModConfigSpec.DoubleValue PURPLE_VOID_ORB_SPEED = BUILDER
+            .comment("Orb travel speed (blocks per tick).")
+            .defineInRange("purpleVoid.orbSpeed", 0.72, 0.35, 1.4);
+
+    public static final ModConfigSpec.DoubleValue PURPLE_VOID_ORB_RADIUS = BUILDER
+            .comment("Radius of the dense sphere: damage, block breaking, and particles (blocks).")
+            .defineInRange("purpleVoid.orbRadius", 4.5, 1.5, 9.0);
+
+    public static final ModConfigSpec.DoubleValue PURPLE_VOID_BREAK_RADIUS_SCALE = BUILDER
+            .comment("Block destruction radius as a fraction of orb radius (1.0 = same sphere as damage).")
+            .defineInRange("purpleVoid.breakRadiusScale", 1.05, 0.5, 1.5);
+
+    public static final ModConfigSpec.IntValue PURPLE_VOID_ORB_MAX_LIFE_TICKS = BUILDER
+            .comment("Max ticks before the orb expires without hitting a wall.")
+            .defineInRange("purpleVoid.orbMaxLifeTicks", 22, 8, 60);
+
+    public static final ModConfigSpec.DoubleValue PURPLE_VOID_PULL_STRENGTH = BUILDER
+            .comment("Inward pull while inside the orb (gravity-like); scaled stronger near the center.")
+            .defineInRange("purpleVoid.pullStrength", 0.58, 0.12, 1.4);
+
+    public static final ModConfigSpec.DoubleValue PURPLE_VOID_LIFE_STEAL_RATIO = BUILDER
+            .comment("Fraction of damage dealt returned as healing to the caster.")
+            .defineInRange("purpleVoid.lifeStealRatio", 0.30, 0.0, 1.0);
+
+    public static final ModConfigSpec.DoubleValue PURPLE_VOID_BREAK_MAX_DESTROY_SPEED = BUILDER
+            .comment("Break blocks with destroy speed at or below this value (0 disables breaking).")
+            .defineInRange("purpleVoid.breakMaxDestroySpeed", 1.5, 0.0, 50.0);
+
     static final ModConfigSpec SPEC = BUILDER.build();
 
     private static boolean validateItemName(final Object obj) {

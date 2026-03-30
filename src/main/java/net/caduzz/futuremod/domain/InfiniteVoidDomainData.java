@@ -31,6 +31,12 @@ public class InfiniteVoidDomainData implements INBTSerializable<CompoundTag> {
         this.cooldownTicks = Math.max(this.cooldownTicks, cooldownTicks);
     }
 
+    /** Encerra o dominio antes do tempo; aplica cooldown completo (servidor). */
+    public void endEarlyWithCooldown(int fullCooldownTicks) {
+        this.activeTicks = 0;
+        this.cooldownTicks = Math.max(this.cooldownTicks, Math.max(1, fullCooldownTicks));
+    }
+
     public void tick() {
         if (activeTicks > 0) activeTicks--;
         if (cooldownTicks > 0) cooldownTicks--;
