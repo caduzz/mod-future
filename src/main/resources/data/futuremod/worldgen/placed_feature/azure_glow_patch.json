@@ -1,9 +1,9 @@
 {
-  "feature": "futuremod:creative_realm_snow_layer",
+  "feature": "futuremod:azure_glow_patch",
   "placement": [
     {
       "type": "minecraft:count",
-      "count": 200
+      "count": 3
     },
     {
       "type": "minecraft:in_square"
@@ -13,10 +13,10 @@
       "height": {
         "type": "minecraft:uniform",
         "max_inclusive": {
-          "absolute": 256
+          "absolute": 200
         },
         "min_inclusive": {
-          "above_bottom": 0
+          "above_bottom": 32
         }
       }
     },
@@ -27,15 +27,16 @@
         "blocks": "minecraft:air"
       },
       "direction_of_search": "down",
-      "max_steps": 12,
+      "max_steps": 3,
       "target_condition": {
-        "type": "minecraft:solid"
+        "type": "minecraft:matching_blocks",
+        "blocks": [
+          "minecraft:snow_block",
+          "futuremod:azure_soil_block",
+          "minecraft:ice",
+          "minecraft:packed_ice"
+        ]
       }
-    },
-    {
-      "type": "minecraft:random_offset",
-      "xz_spread": 0,
-      "y_spread": 1
     },
     {
       "type": "minecraft:block_predicate_filter",
@@ -45,25 +46,9 @@
           {
             "type": "minecraft:matching_blocks",
             "blocks": "minecraft:air"
-          },
-          {
-            "type": "minecraft:not",
-            "predicate": {
-              "type": "minecraft:matching_blocks",
-              "offset": [0, 1, 0],
-              "blocks": "minecraft:snow"
-            }
-          },
-          {
-            "type": "minecraft:matching_block_tag",
-            "offset": [0, -1, 0],
-            "tag": "futuremod:creative_realm_snow_floor"
           }
         ]
       }
-    },
-    {
-      "type": "minecraft:biome"
     }
   ]
 }

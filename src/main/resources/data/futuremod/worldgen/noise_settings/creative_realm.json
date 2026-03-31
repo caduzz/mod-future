@@ -202,6 +202,31 @@
         }
       },
       {
+        "type": "minecraft:condition",
+        "if_true": {
+          "type": "minecraft:biome",
+          "biome_is": [
+            "futuremod:creative_realm_azure_glade"
+          ]
+        },
+        "then_run": {
+          "type": "minecraft:condition",
+          "if_true": {
+            "type": "minecraft:stone_depth",
+            "add_surface_depth": false,
+            "offset": 0,
+            "secondary_depth_range": 0,
+            "surface_type": "ceiling"
+          },
+          "then_run": {
+            "type": "minecraft:block",
+            "result_state": {
+              "Name": "futuremod:azure_soil_block"
+            }
+          }
+        }
+      },
+      {
         "type": "minecraft:sequence",
         "sequence": [
           {
@@ -1492,30 +1517,42 @@
                         }
                       },
                       {
-                        "type": "minecraft:sequence",
-                        "sequence": [
-                          {
-                            "type": "minecraft:condition",
-                            "if_true": {
-                              "type": "minecraft:water",
-                              "add_stone_depth": false,
-                              "offset": 0,
-                              "surface_depth_multiplier": 0
+                        "type": "minecraft:condition",
+                        "if_true": {
+                          "type": "minecraft:not",
+                          "invert": {
+                            "type": "minecraft:biome",
+                            "biome_is": [
+                              "futuremod:creative_realm_azure_glade"
+                            ]
+                          }
+                        },
+                        "then_run": {
+                          "type": "minecraft:sequence",
+                          "sequence": [
+                            {
+                              "type": "minecraft:condition",
+                              "if_true": {
+                                "type": "minecraft:water",
+                                "add_stone_depth": false,
+                                "offset": 0,
+                                "surface_depth_multiplier": 0
+                              },
+                              "then_run": {
+                                "type": "minecraft:block",
+                                "result_state": {
+                                  "Name": "futuremod:future_grass_block"
+                                }
+                              }
                             },
-                            "then_run": {
+                            {
                               "type": "minecraft:block",
                               "result_state": {
                                 "Name": "futuremod:future_grass_block"
                               }
                             }
-                          },
-                          {
-                            "type": "minecraft:block",
-                            "result_state": {
-                              "Name": "futuremod:future_grass_block"
-                            }
-                          }
-                        ]
+                          ]
+                        }
                       }
                     ]
                   }
@@ -2132,9 +2169,21 @@
                         }
                       },
                       {
-                        "type": "minecraft:block",
-                        "result_state": {
-                          "Name": "futuremod:future_grass_block"
+                        "type": "minecraft:condition",
+                        "if_true": {
+                          "type": "minecraft:not",
+                          "invert": {
+                            "type": "minecraft:biome",
+                            "biome_is": [
+                              "futuremod:creative_realm_azure_glade"
+                            ]
+                          }
+                        },
+                        "then_run": {
+                          "type": "minecraft:block",
+                          "result_state": {
+                            "Name": "futuremod:future_grass_block"
+                          }
                         }
                       }
                     ]

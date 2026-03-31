@@ -117,7 +117,7 @@ public class ModBlocks {
   public static final DeferredBlock<Block> AZURE_MOSS_BLOCK = registerBlock("azure_moss_block",
       () -> new Block(
           BlockBehaviour.Properties.of()
-              .mapColor(MapColor.COLOR_CYAN)
+              .mapColor(MapColor.COLOR_BLUE)
               .strength(0.1F)
               .sound(SoundType.MOSS)));
 
@@ -125,7 +125,7 @@ public class ModBlocks {
   public static final DeferredBlock<Block> AZURE_MOSS_CARPET = registerBlock("azure_moss_carpet",
       () -> new CarpetBlock(
           BlockBehaviour.Properties.of()
-              .mapColor(MapColor.COLOR_CYAN)
+              .mapColor(MapColor.COLOR_BLUE)
               .strength(0.1F)
               .sound(SoundType.MOSS)));
 
@@ -141,11 +141,11 @@ public class ModBlocks {
   public static final DeferredBlock<Block> AZURE_GLOW_FLOWER = registerBlock("azure_glow_flower",
       () -> new Block(
           BlockBehaviour.Properties.of()
-              .mapColor(MapColor.COLOR_CYAN)
+              .mapColor(MapColor.COLOR_BLUE)
               .noCollission()
               .instabreak()
               .sound(SoundType.GRASS)
-              .lightLevel(state -> 8)));
+              .lightLevel(state -> 4)));
 
   /** Vinhas azuis da Creative Realm para geração no teto. */
   public static final DeferredBlock<Block> AZURE_CAVE_VINES = registerBlock("azure_cave_vines",

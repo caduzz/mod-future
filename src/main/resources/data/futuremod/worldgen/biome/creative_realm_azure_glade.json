@@ -9,8 +9,10 @@
   "downfall": 0.6,
   "effects": {
     "fog_color": 16777215,
-    "foliage_color": 16777215,
-    "grass_color": 16777215,
+    "foliage_color": 11393254,
+    "foliage_color_override": 11393254,
+    "grass_color": 11393254,
+    "grass_color_override": 11393254,
     "mood_sound": {
       "block_search_extent": 12,
       "offset": 2.0,
@@ -87,14 +89,13 @@
       "minecraft:spring_lava"
     ],
     [
+      "futuremod:azure_glow_patch",
       "minecraft:glow_lichen",
-      "futuremod:azure_moss_patch",
-      "futuremod:azure_moss_ceiling_vegetation",
-      "futuremod:azure_moss_vegetation",
       "minecraft:rooted_azalea_tree",
       "minecraft:spore_blossom"
     ],
     [
+      "futuremod:azure_ice_patch",
       "futuremod:creative_realm_snow_layer",
       "minecraft:freeze_top_layer"
     ]
@@ -111,5 +112,5 @@
     "water_ambient": [],
     "water_creature": []
   },
-  "temperature": 0.3
+  "temperature": -0.5
 }
