@@ -45,6 +45,9 @@
   "item.futuremod.future_glow_berries": "Future Glow Berries",
   "item.futuremod.future_sweet_berries": "Future Sweet Berries",
   "entity.futuremod.bismuth_warden": "Bismuth Warden",
+  "entity.futuremod.blue_void_orb": "Lapse Orb",
+  "entity.futuremod.red_void_orb": "Reversal Orb",
+  "entity.futuremod.purple_void": "Purple Void",
 
   "container.futuremod.relic_slot": "Mod Relics",
 

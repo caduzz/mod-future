@@ -9,7 +9,8 @@ import net.caduzz.futuremod.client.DomainFreezeClientState;
 import net.caduzz.futuremod.client.InfiniteVoidClientState;
 import net.caduzz.futuremod.client.ModKeyBindings;
 import net.caduzz.futuremod.client.PurpleVoidClientState;
-import net.caduzz.futuremod.client.PurpleVoidOrbRenderer;
+import net.caduzz.futuremod.client.FusionOrbRenderer;
+import net.caduzz.futuremod.client.PurpleVoidRenderer;
 import net.caduzz.futuremod.command.ModCommands;
 import net.caduzz.futuremod.domain.InfiniteVoidDomainAttachment;
 import net.caduzz.futuremod.menu.ModMenuTypes;
@@ -192,7 +193,9 @@ public class FutureMod {
         @SubscribeEvent
         static void registerEntityRenderers(EntityRenderersEvent.RegisterRenderers event) {
             event.registerEntityRenderer(ModEntities.BISMUTH_WARDEN.get(), WardenRenderer::new);
-            event.registerEntityRenderer(ModEntities.PURPLE_VOID_ORB.get(), PurpleVoidOrbRenderer::new);
+            event.registerEntityRenderer(ModEntities.BLUE_VOID_ORB.get(), ctx -> new FusionOrbRenderer<>(ctx, 64, 158, 255));
+            event.registerEntityRenderer(ModEntities.RED_VOID_ORB.get(), ctx -> new FusionOrbRenderer<>(ctx, 255, 72, 72));
+            event.registerEntityRenderer(ModEntities.PURPLE_VOID.get(), PurpleVoidRenderer::new);
         }
 
         /** Cor rosa-roxa para musgo / tapete do bioma Magenta. */

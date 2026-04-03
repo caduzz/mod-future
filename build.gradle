@@ -55,7 +55,7 @@ neoForge {
         client1 {
             client()
             gameDirectory = project.file('run/client1')
-            programArguments.addAll '--username', 'Geto'
+            programArguments.addAll '--username', 'Gojo'
             systemProperty 'neoforge.enabledGameTestNamespaces', project.mod_id
         }
 

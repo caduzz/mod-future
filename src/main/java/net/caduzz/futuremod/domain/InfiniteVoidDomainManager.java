@@ -10,21 +10,21 @@ import net.caduzz.futuremod.block.ModBlocks;
 import net.caduzz.futuremod.item.ModItems;
 import net.caduzz.futuremod.relic.RelicSlotAttachment;
 import net.minecraft.core.BlockPos;
-import net.minecraft.sounds.SoundEvents;
-import net.minecraft.sounds.SoundSource;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.projectile.Projectile;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.effect.MobEffectInstance;
-import net.minecraft.world.effect.MobEffects;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 
@@ -42,6 +42,7 @@ public final class InfiniteVoidDomainManager {
     private record DomainPlayerFreezeAnchor(Vec3 position, float yRot, float xRot) {}
 
     private static final Map<UUID, DomainPlayerFreezeAnchor> DOMAIN_PLAYER_FREEZE_ANCHORS = new HashMap<>();
+    private static final Map<UUID, Integer> ACTIVATION_SEQUENCE_TICKS = new HashMap<>();
     private static final int DAMAGE_INTERVAL_TICKS = 10;
     private static final float DOMAIN_DAMAGE_MAX_HEALTH_RATIO = 0.20f;
     private static final float LIFE_STEAL_RATIO = 0.50f;
@@ -83,17 +84,8 @@ public final class InfiniteVoidDomainManager {
         domainData.activate(
                 Config.INFINITE_VOID_DURATION_SECONDS.get() * 20,
                 Config.INFINITE_VOID_COOLDOWN_SECONDS.get() * 20);
+        ACTIVATION_SEQUENCE_TICKS.put(player.getUUID(), 0);
         createDomainShell(player);
-        ServerLevel level = player.serverLevel();
-        level.playSound(
-                null,
-                player.getX(),
-                player.getY(),
-                player.getZ(),
-                SoundEvents.RESPAWN_ANCHOR_CHARGE,
-                SoundSource.PLAYERS,
-                1.35f,
-                0.55f);
         return ActivateResult.ACTIVATED;
     }
 
@@ -252,34 +244,47 @@ public final class InfiniteVoidDomainManager {
             return;
         }
 
-        int elapsed = (Config.INFINITE_VOID_DURATION_SECONDS.get() * 20) - domainData.getActiveTicks();
-        double radius = Config.INFINITE_VOID_RADIUS_BLOCKS.get();
+        // Rastrear e incrementar ticks de ativação cinematográfica
+        int activationTicks = ACTIVATION_SEQUENCE_TICKS.getOrDefault(owner.getUUID(), 0);
+        ACTIVATION_SEQUENCE_TICKS.put(owner.getUUID(), activationTicks + 1);
+
         ServerLevel level = owner.serverLevel();
         Vec3 domainCenter = getDomainCenter(owner);
-        double radiusSq = radius * radius;
-        AABB domainArea = new AABB(domainCenter, domainCenter).inflate(radius);
-        for (LivingEntity victim : level.getEntitiesOfClass(
-                LivingEntity.class,
-                domainArea,
-                entity -> entity.isAlive()
-                        && entity != owner
-                        && entity.position().distanceToSqr(domainCenter) <= radiusSq)) {
-            victim.addEffect(new MobEffectInstance(MobEffects.GLOWING, 25, 0, false, false, true));
+
+        // Executar sequência cinematográfica durante os primeiros 70 ticks (~3.5 segundos)
+        if (activationTicks < 70) {
+            VoidActivationSequence.tickActivation(owner, activationTicks);
+        } else {
+            // Após sequência completa, comportamento normal do domínio
+            int elapsed = (Config.INFINITE_VOID_DURATION_SECONDS.get() * 20) - domainData.getActiveTicks();
+            double radius = Config.INFINITE_VOID_RADIUS_BLOCKS.get();
+            double radiusSq = radius * radius;
+            AABB domainArea = new AABB(domainCenter, domainCenter).inflate(radius);
+
+            for (LivingEntity victim : level.getEntitiesOfClass(
+                    LivingEntity.class,
+                    domainArea,
+                    entity -> entity.isAlive()
+                            && entity != owner
+                            && entity.position().distanceToSqr(domainCenter) <= radiusSq)) {
+                victim.addEffect(new MobEffectInstance(MobEffects.GLOWING, 25, 0, false, false, true));
+            }
+
+            owner.removeEffect(MobEffects.BLINDNESS);
+            owner.removeEffect(MobEffects.MOVEMENT_SLOWDOWN);
+            owner.removeEffect(MobEffects.DIG_SLOWDOWN);
+
+            applyDomainDamage(level, owner, domainCenter, radius, elapsed);
+            spawnParticles(level, domainCenter, radius);
+            spawnPressureParticles(level, domainCenter, radius);
+            playAmbientSound(level, domainCenter, elapsed);
         }
-
-        owner.removeEffect(MobEffects.BLINDNESS);
-        owner.removeEffect(MobEffects.MOVEMENT_SLOWDOWN);
-        owner.removeEffect(MobEffects.DIG_SLOWDOWN);
-
-        applyDomainDamage(level, owner, domainCenter, radius, elapsed);
-        spawnParticles(level, domainCenter, radius);
-        spawnPressureParticles(level, domainCenter, radius);
-        playAmbientSound(level, domainCenter, elapsed);
     }
 
     public static void cleanupFor(ServerPlayer player) {
         clearDomainShell(player);
         clearDomainFreezePlayerAnchor(player);
+        ACTIVATION_SEQUENCE_TICKS.remove(player.getUUID());
         DomainFreezeSync.clear(player);
     }
 
@@ -410,7 +415,8 @@ public final class InfiniteVoidDomainManager {
         }
         ServerLevel level = owner.serverLevel();
         for (Map.Entry<BlockPos, BlockState> entry : shell.previousStates().entrySet()) {
-            level.setBlock(entry.getKey(), entry.getValue(), 3);
+            // Flag 2 = UPDATE_NEIGHBORS apenas (sem propagação de som)
+            level.setBlock(entry.getKey(), entry.getValue(), 2);
         }
         Vec3 c = domainCenterFromShell(shell);
         int scan = shell.radius() + 4;
@@ -453,7 +459,8 @@ public final class InfiniteVoidDomainManager {
             return;
         }
         backup.putIfAbsent(pos, oldState);
-        level.setBlock(pos, targetState, 3);
+        // Flag 2 = UPDATE_NEIGHBORS apenas (sem propagação de som)
+        level.setBlock(pos, targetState, 2);
     }
 
     /**

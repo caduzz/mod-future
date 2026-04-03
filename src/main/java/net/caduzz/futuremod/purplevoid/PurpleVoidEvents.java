@@ -23,7 +23,15 @@ public final class PurpleVoidEvents {
     @SubscribeEvent
     public static void onPlayerLoggedIn(PlayerEvent.PlayerLoggedInEvent event) {
         if (event.getEntity() instanceof ServerPlayer serverPlayer) {
+            PurpleVoidManager.discardOwnedVoidInOtherLevels(serverPlayer);
             PurpleVoidManager.syncHud(serverPlayer);
+        }
+    }
+
+    @SubscribeEvent
+    public static void onPlayerChangedDimension(PlayerEvent.PlayerChangedDimensionEvent event) {
+        if (event.getEntity() instanceof ServerPlayer serverPlayer) {
+            PurpleVoidManager.discardOwnedVoidTechLeavingDimension(serverPlayer, event.getFrom());
         }
     }
 }
