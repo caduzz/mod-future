@@ -1,16 +1,14 @@
 {
   "carvers": {
-    "air": [
-      "minecraft:cave",
-      "minecraft:cave_extra_underground",
-      "minecraft:canyon"
-    ]
+    "air": []
   },
-  "downfall": 0.7,
+  "downfall": 0.65,
   "effects": {
     "fog_color": 16777215,
     "foliage_color": 16777215,
     "grass_color": 16777215,
+    "grass_color_override": 16755370,
+    "foliage_color_override": 16755370,
     "mood_sound": {
       "block_search_extent": 12,
       "offset": 2.0,
@@ -114,5 +112,5 @@
     "water_ambient": [],
     "water_creature": []
   },
-  "temperature": 0.5
+  "temperature": 0.85
 }

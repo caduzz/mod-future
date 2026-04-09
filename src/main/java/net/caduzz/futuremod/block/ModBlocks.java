@@ -5,6 +5,8 @@ import java.util.function.Supplier;
 import net.caduzz.futuremod.FutureMod;
 import net.caduzz.futuremod.item.ModItems;
 import net.caduzz.futuremod.block.BismuthAnvilBlock;
+import net.caduzz.futuremod.block.CheckersBlock;
+import net.caduzz.futuremod.block.ChessBlock;
 import net.caduzz.futuremod.block.VoidBlackBlock;
 import net.minecraft.util.valueproviders.UniformInt;
 import net.minecraft.world.item.BlockItem;
@@ -173,6 +175,22 @@ public class ModBlocks {
               .mapColor(MapColor.COLOR_LIGHT_BLUE)
               .strength(0.5F)
               .sound(SoundType.ROOTED_DIRT)));
+
+  /** Tabuleiro de damas 8x8 com BlockEntity (estado persistido). */
+  public static final DeferredBlock<Block> CHECKERS_BLOCK = registerBlock("checkers_block",
+      () -> new CheckersBlock(
+          BlockBehaviour.Properties.of()
+              .mapColor(MapColor.COLOR_BROWN)
+              .strength(2.5F, 3.0F)
+              .sound(SoundType.WOOD)));
+
+  /** Tabuleiro de xadrez 8x8 com BlockEntity próprio. */
+  public static final DeferredBlock<Block> CHESS_BLOCK = registerBlock("chess_block",
+      () -> new ChessBlock(
+          BlockBehaviour.Properties.of()
+              .mapColor(MapColor.COLOR_BLACK)
+              .strength(2.5F, 3.0F)
+              .sound(SoundType.WOOD)));
 
   private static <T extends Block> DeferredBlock<T> registerBlock(String name, Supplier<T> block) {
     DeferredBlock<T> toReturn = BLOCKS.register(name, block);

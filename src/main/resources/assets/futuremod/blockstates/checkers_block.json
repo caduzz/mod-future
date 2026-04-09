@@ -1,0 +1,8 @@
+{
+  "variants": {
+    "facing=north": { "model": "futuremod:block/checkers_block", "y": 180 },
+    "facing=south": { "model": "futuremod:block/checkers_block" },
+    "facing=west": { "model": "futuremod:block/checkers_block", "y": 270 },
+    "facing=east": { "model": "futuremod:block/checkers_block", "y": 90 }
+  }
+}

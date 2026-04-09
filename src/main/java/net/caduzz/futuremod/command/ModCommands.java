@@ -2,12 +2,14 @@ package net.caduzz.futuremod.command;
 
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.context.CommandContext;
+import net.caduzz.futuremod.block.ModBlocks;
 import net.caduzz.futuremod.dimension.ModDimensions;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 
 /**
@@ -27,6 +29,11 @@ public final class ModCommands {
                 Commands.literal("realm")
                         .requires(source -> source.getEntity() instanceof ServerPlayer)
                         .executes(ModCommands::goToCreativeRealm)
+        );
+        dispatcher.register(
+                Commands.literal("boards_test")
+                        .requires(source -> source.getEntity() instanceof ServerPlayer)
+                        .executes(ModCommands::giveBoardsTestItems)
         );
     }
 
@@ -53,6 +60,15 @@ public final class ModCommands {
             ModDimensions.teleportToDimension(player, creativeRealm);
             context.getSource().sendSuccess(() -> Component.literal("Teleportado para a Creative Realm."), true);
         }
+        return 1;
+    }
+
+    private static int giveBoardsTestItems(CommandContext<CommandSourceStack> context) {
+        ServerPlayer player = (ServerPlayer) context.getSource().getEntity();
+        if (player == null) return 0;
+        player.getInventory().add(new ItemStack(ModBlocks.CHECKERS_BLOCK.get()));
+        player.getInventory().add(new ItemStack(ModBlocks.CHESS_BLOCK.get()));
+        context.getSource().sendSuccess(() -> Component.literal("Recebeste tabuleiro de damas e tabuleiro de xadrez."), true);
         return 1;
     }
 }

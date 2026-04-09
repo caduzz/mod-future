@@ -1,0 +1,14 @@
+{
+  "structures": [
+    {
+      "structure": "futuremod:creative_realm_cave_crystal",
+      "weight": 1
+    }
+  ],
+  "placement": {
+    "type": "minecraft:random_spread",
+    "salt": 95432177,
+    "spacing": 40,
+    "separation": 12
+  }
+}

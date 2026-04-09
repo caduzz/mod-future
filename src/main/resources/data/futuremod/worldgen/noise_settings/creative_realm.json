@@ -12,7 +12,7 @@
   "disable_mob_generation": false,
   "legacy_random_source": true,
   "noise": {
-    "height": 192,
+    "height": 256,
     "min_y": -64,
     "size_horizontal": 1,
     "size_vertical": 2
@@ -41,7 +41,7 @@
                   "from_value": 0.0,
                   "from_y": -72,
                   "to_value": 1.0,
-                  "to_y": -40
+                  "to_y": -36
                 },
                 "argument2": {
                   "type": "minecraft:add",
@@ -54,9 +54,9 @@
                       "argument1": {
                         "type": "minecraft:y_clamped_gradient",
                         "from_value": 1.0,
-                        "from_y": 104,
+                        "from_y": 168,
                         "to_value": 0.0,
-                        "to_y": 128
+                        "to_y": 191
                       },
                       "argument2": {
                         "type": "minecraft:add",
@@ -83,7 +83,7 @@
       "shift_x": "minecraft:shift_x",
       "shift_y": 0.0,
       "shift_z": "minecraft:shift_z",
-      "xz_scale": 0.25,
+      "xz_scale": 0.92,
       "y_scale": 0.0
     },
     "vegetation": {
@@ -92,7 +92,16 @@
       "shift_x": "minecraft:shift_x",
       "shift_y": 0.0,
       "shift_z": "minecraft:shift_z",
-      "xz_scale": 0.25,
+      "xz_scale": 0.92,
+      "y_scale": 0.0
+    },
+    "weirdness": {
+      "type": "minecraft:shifted_noise",
+      "noise": "minecraft:vegetation",
+      "shift_x": "minecraft:shift_z",
+      "shift_y": 0.0,
+      "shift_z": "minecraft:shift_x",
+      "xz_scale": 1.18,
       "y_scale": 0.0
     },
     "vein_gap": 0.0,
@@ -152,7 +161,9 @@
           "type": "minecraft:biome",
           "biome_is": [
             "futuremod:creative_realm_magenta_grove",
-            "futuremod:creative_realm_azure_glade"
+            "futuremod:creative_realm_azure_glade",
+            "futuremod:cherry_biome",
+            "futuremod:azure_biome"
           ]
         },
         "then_run": {
@@ -172,7 +183,8 @@
                 "if_true": {
                   "type": "minecraft:biome",
                   "biome_is": [
-                    "futuremod:creative_realm_magenta_grove"
+                    "futuremod:creative_realm_magenta_grove",
+                    "futuremod:cherry_biome"
                   ]
                 },
                 "then_run": {
@@ -187,7 +199,8 @@
                 "if_true": {
                   "type": "minecraft:biome",
                   "biome_is": [
-                    "futuremod:creative_realm_azure_glade"
+                    "futuremod:creative_realm_azure_glade",
+                    "futuremod:azure_biome"
                   ]
                 },
                 "then_run": {
@@ -206,7 +219,8 @@
         "if_true": {
           "type": "minecraft:biome",
           "biome_is": [
-            "futuremod:creative_realm_azure_glade"
+            "futuremod:creative_realm_azure_glade",
+            "futuremod:azure_biome"
           ]
         },
         "then_run": {
@@ -1523,7 +1537,8 @@
                           "invert": {
                             "type": "minecraft:biome",
                             "biome_is": [
-                              "futuremod:creative_realm_azure_glade"
+                              "futuremod:creative_realm_azure_glade",
+                              "futuremod:azure_biome"
                             ]
                           }
                         },
@@ -2175,7 +2190,8 @@
                           "invert": {
                             "type": "minecraft:biome",
                             "biome_is": [
-                              "futuremod:creative_realm_azure_glade"
+                              "futuremod:creative_realm_azure_glade",
+                              "futuremod:azure_biome"
                             ]
                           }
                         },

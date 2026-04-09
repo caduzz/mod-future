@@ -13,10 +13,10 @@
       "height": {
         "type": "minecraft:uniform",
         "max_inclusive": {
-          "absolute": 256
+          "below_top": 8
         },
         "min_inclusive": {
-          "above_bottom": 0
+          "above_bottom": 10
         }
       }
     },
@@ -58,6 +58,14 @@
             "type": "minecraft:matching_block_tag",
             "offset": [0, -1, 0],
             "tag": "futuremod:creative_realm_snow_floor"
+          },
+          {
+            "type": "minecraft:not",
+            "predicate": {
+              "type": "minecraft:matching_blocks",
+              "offset": [0, -1, 0],
+              "blocks": "minecraft:bedrock"
+            }
           }
         ]
       }

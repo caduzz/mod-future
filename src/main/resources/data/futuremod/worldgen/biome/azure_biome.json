@@ -1,42 +1,35 @@
 {
   "carvers": {
-    "air": [
-      "minecraft:cave",
-      "minecraft:cave_extra_underground",
-      "minecraft:canyon"
-    ]
+    "air": []
   },
-  "downfall": 0.7,
+  "downfall": 0.55,
   "effects": {
     "fog_color": 16777215,
-    "foliage_color": 16777215,
-    "grass_color": 16777215,
+    "foliage_color": 11393254,
+    "foliage_color_override": 11393254,
+    "grass_color": 11393254,
+    "grass_color_override": 11393254,
     "mood_sound": {
       "block_search_extent": 12,
       "offset": 2.0,
       "sound": "minecraft:ambient.cave",
       "tick_delay": 6000
     },
-    "ambient_sound": "minecraft:ambient.basalt_deltas.loop",
-    "additions_sound": {
-      "sound": "minecraft:ambient.basalt_deltas.additions",
-      "tick_chance": 0.007
-    },
     "music": {
       "max_delay": 24000,
       "min_delay": 12000,
       "replace_current_music": false,
-      "sound": "minecraft:music.overworld.cherry_grove"
+      "sound": "minecraft:music.overworld.lush_caves"
     },
     "particle": {
       "options": {
-        "type": "minecraft:cherry_leaves"
+        "type": "minecraft:end_rod"
       },
-      "probability": 0.006
+      "probability": 0.003
     },
-    "sky_color": 16744703,
-    "water_color": 16711935,
-    "water_fog_color": 16738074
+    "sky_color": 16774155,
+    "water_color": 14283882,
+    "water_fog_color": 15136391
   },
   "features": [
     [],
@@ -92,15 +85,16 @@
       "minecraft:spring_lava"
     ],
     [
+      "futuremod:azure_glow_patch",
       "minecraft:glow_lichen",
-      "minecraft:flower_cherry",
-      "minecraft:trees_cherry",
-      "futuremod:future_moss_ceiling_vegetation",
-      "futuremod:future_moss_vegetation",
       "minecraft:rooted_azalea_tree",
       "minecraft:spore_blossom"
     ],
-    []
+    [
+      "futuremod:azure_ice_patch",
+      "futuremod:creative_realm_snow_layer",
+      "minecraft:freeze_top_layer"
+    ]
   ],
   "has_precipitation": true,
   "spawn_costs": {},
@@ -114,5 +108,5 @@
     "water_ambient": [],
     "water_creature": []
   },
-  "temperature": 0.5
+  "temperature": -0.5
 }

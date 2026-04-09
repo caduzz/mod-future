@@ -46,6 +46,8 @@ public class ModCreativeModeTabs {
           output.accept(ModBlocks.FUTURE_CAVE_VINES);
           output.accept(ModBlocks.FUTURE_CAVE_VINES_LIT);
           output.accept(ModBlocks.VOID_BLACK_BLOCK);
+          output.accept(ModBlocks.CHECKERS_BLOCK);
+          output.accept(ModBlocks.CHESS_BLOCK);
         }
       )
       .build()

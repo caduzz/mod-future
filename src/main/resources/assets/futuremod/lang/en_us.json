@@ -13,6 +13,8 @@
   "block.futuremod.future_cave_vines": "Future Cave Vines",
   "block.futuremod.future_cave_vines_lit": "Future Cave Vines (Lit)",
   "block.futuremod.void_black_block": "Void Black Block",
+  "block.futuremod.checkers_block": "Checkers Board",
+  "block.futuremod.chess_block": "Chess Board",
   "container.futuremod.bismuth_anvil": "Bismuth Anvil",
 
   "dimension.futuremod.creative_realm": "Creative Realm",
@@ -20,6 +22,10 @@
   "biome.futuremod.creative_realm_cherry_grove": "Creative Realm Cherry Grove",
   "biome.futuremod.creative_realm_forest": "Creative Realm Forest",
   "biome.futuremod.creative_realm_moss": "Creative Realm Moss",
+  "biome.futuremod.creative_realm_magenta_grove": "Creative Realm Magenta Grove (legacy)",
+  "biome.futuremod.creative_realm_azure_glade": "Creative Realm Azure Glade (legacy)",
+  "biome.futuremod.cherry_biome": "Creative Realm Cherry Hollow",
+  "biome.futuremod.azure_biome": "Creative Realm Azure Hollow",
 
   "creativetab.futuremod.bismuth_blocks": "FutureMod Blocks",
   "creativetab.futuremod.futuremod_items": "FutureMod Items",
