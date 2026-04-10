@@ -5,14 +5,10 @@ import org.slf4j.Logger;
 import com.mojang.logging.LogUtils;
 
 import net.caduzz.futuremod.block.ModBlocks;
-import net.caduzz.futuremod.block.entity.ModBlockEntities;
 import net.caduzz.futuremod.client.DomainFreezeClientState;
 import net.caduzz.futuremod.client.InfiniteVoidClientState;
 import net.caduzz.futuremod.client.ModKeyBindings;
 import net.caduzz.futuremod.client.PurpleVoidClientState;
-import net.caduzz.futuremod.client.CheckersBlockRenderer;
-import net.caduzz.futuremod.client.ChessBlockRenderer;
-import net.caduzz.futuremod.client.ChessBlockbenchModelLoader;
 import net.caduzz.futuremod.client.FusionOrbRenderer;
 import net.caduzz.futuremod.client.PurpleVoidRenderer;
 import net.caduzz.futuremod.command.ModCommands;
@@ -95,7 +91,6 @@ public class FutureMod {
 
         ModItems.register(modEventBus);
         ModBlocks.register(modEventBus);
-        ModBlockEntities.register(modEventBus);
         ModMenuTypes.register(modEventBus);
         ModEntities.register(modEventBus);
         ModArmorMaterials.ARMOR_MATERIALS.register(modEventBus);
@@ -201,18 +196,11 @@ public class FutureMod {
         }
 
         @SubscribeEvent
-        static void registerChessModelReload(RegisterClientReloadListenersEvent event) {
-            event.registerReloadListener(ChessBlockbenchModelLoader.reloader());
-        }
-
-        @SubscribeEvent
         static void registerEntityRenderers(EntityRenderersEvent.RegisterRenderers event) {
             event.registerEntityRenderer(ModEntities.BISMUTH_WARDEN.get(), WardenRenderer::new);
             event.registerEntityRenderer(ModEntities.BLUE_VOID_ORB.get(), ctx -> new FusionOrbRenderer<>(ctx, 64, 158, 255));
             event.registerEntityRenderer(ModEntities.RED_VOID_ORB.get(), ctx -> new FusionOrbRenderer<>(ctx, 255, 72, 72));
             event.registerEntityRenderer(ModEntities.PURPLE_VOID.get(), PurpleVoidRenderer::new);
-            event.registerBlockEntityRenderer(ModBlockEntities.CHECKERS.get(), CheckersBlockRenderer::new);
-            event.registerBlockEntityRenderer(ModBlockEntities.CHESS.get(), ChessBlockRenderer::new);
         }
 
         /** Cor rosa-roxa para musgo / tapete do bioma Magenta. */
